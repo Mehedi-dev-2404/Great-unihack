@@ -154,7 +154,6 @@ def execute(action: dict) -> dict:
         details["monthly_saving"] = action.get("monthly_value")
     elif action.get("monthly_value"):
         details["estimated_monthly_value"] = action.get("monthly_value")
-    verb = {"cancelled": "Cancelled", "sent": "Sent", "submitted": "Submitted"}[outcome]
     ts = now_iso()
     return {
         "id": "r-" + uuid.uuid4().hex[:10],
@@ -162,7 +161,7 @@ def execute(action: dict) -> dict:
         "type": action.get("type"),
         "title": action.get("title"),
         "created_at": ts,
-        "summary": f"{verb} on {ts[:10]}: {action.get('summary', '')}",
+        "summary": f"Prepared and logged on {ts[:10]}: {action.get('summary', '')}",
         "outcome": outcome,
         "details": details,
     }
