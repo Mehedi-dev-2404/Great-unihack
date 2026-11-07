@@ -763,7 +763,7 @@ def _uc_child_action(context: dict, rule: dict, notification: dict | None, notes
         "",
         "Thank you,",
         name,
-    ] + ([f"", f"Note: {notes}"] if notes else []))
+    ])
     fields = {
         "claimant_name": name,
         "benefit": "Universal Credit",
@@ -795,7 +795,7 @@ def _uc_child_action(context: dict, rule: dict, notification: dict | None, notes
                   "subject": "Change of circumstances: add child element after two-child limit removal",
                   "body": body},
         "form": {"name": "Universal Credit: report a change of circumstances", "fields": fields},
-        "details": {"rule_id": rule.get("id"), "source_url": rule.get("source_url")},
+        "details": {"rule_id": rule.get("id"), "source_url": rule.get("source_url"), "drafter_notes": notes},
     }
 
 
@@ -819,8 +819,6 @@ def _generic_rule_action(context: dict, rule: dict, notification: dict | None, n
         f"Address: {profile.get('address') or profile.get('city') or ''}",
         f"Household: {(profile.get('household') or {}).get('adults', 1)} adult(s), "
         f"{len(_children(profile))} child(ren)",
-        *(f"{k.replace('_', ' ').capitalize()}: {v}" for k, v in facts.items()),
-        *([f"Note: {notes}"] if notes else []),
         "",
         "Thank you,",
         name,
@@ -835,7 +833,7 @@ def _generic_rule_action(context: dict, rule: dict, notification: dict | None, n
         "form": {"name": f"{rule.get('name')} application",
                  "fields": {"name": name, "benefit": rule.get("name"), "council": council,
                             "children": len(_children(profile)), **facts}},
-        "details": {"rule_id": rule.get("id"), "source_url": rule.get("source_url")},
+        "details": {"rule_id": rule.get("id"), "source_url": rule.get("source_url"), "drafter_notes": notes},
     }
 
 

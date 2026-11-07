@@ -27,7 +27,7 @@ def template_draft(action_type: str, profile: dict, notification: dict | None, n
     """Return an Action without id/status/created_at."""
     name = profile.get("name", "the customer")
     n = notification or {}
-    extra = f"\n\nAdditional notes: {notes}" if notes else ""
+    extra = ""  # drafter notes are internal; never put them in the message
 
     if action_type == "cancel_subscription":
         merchant = n.get("merchant") or "the subscription"
