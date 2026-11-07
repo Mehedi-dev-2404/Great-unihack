@@ -446,7 +446,7 @@ def main():
         user, rows, low, end = build(p)
         (ROOT / "users" / f"{p['id']}_{p['slug']}.json").write_text(json.dumps(user, indent=2, ensure_ascii=False) + "\n")
         with open(ROOT / "transactions" / f"{p['id']}_{p['slug']}.csv", "w", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()), lineterminator="\n")
             w.writeheader()
             w.writerows(rows)
         print(f"{p['id']} {p['slug']:<10} txns={len(rows):>4}  lowest_balance={low:>9.2f}  end_balance={end:>9.2f}")
