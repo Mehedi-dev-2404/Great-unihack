@@ -64,7 +64,7 @@ class ChatIn(BaseModel):
 
 
 class ActionIn(BaseModel):
-    type: Literal["cancel_subscription", "send_email", "submit_claim", "fill_form"]
+    type: Literal["cancel_subscription", "send_email", "submit_claim", "fill_form", "set_reminder", "top_up_transfer"]
     notification_id: Optional[str] = None
     notes: Optional[str] = None
 
@@ -180,6 +180,8 @@ def _finalize_action(raw: dict, st: dict, action_type: Optional[str] = None,
 
 
 def _draft(action_type: str, st: dict, notification: Optional[dict], notes: Optional[str]) -> dict:
+    if action_type in ("set_reminder", "top_up_transfer"):
+        return template_draft(action_type, st["profile"], notification, notes)  # numbers, not prose
     brain = get_brain()
     if brain is not None and hasattr(brain, "draft_action"):
         try:
@@ -387,7 +389,8 @@ def list_reports():
 @app.get("/api/forecast")
 def get_forecast(months: int = Query(12, ge=1, le=60)):
     st = _state()
-    return engine.forecast(st["profile"], st["transactions"], st["notifications"], st["actions"], months)
+    eligibility = engine.evaluate_all(st["profile"], st["rules"], st["transactions"])
+    return engine.forecast(st["profile"], st["transactions"], st["notifications"], st["actions"], months, eligibility)
 
 
 @app.post("/api/reset")

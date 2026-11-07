@@ -32,7 +32,8 @@
     "landlord": "One Manchester",
     "monthly_rent": 562.0,
     "council_tax_band": "A",
-    "council_tax_discounts": []
+    "council_tax_discounts": [],
+    "rent_due_day": 12
   },
   "employment": "Part-time shop assistant (Greggs), 12 hours/week",
   "monthly_earned_income": 395.0,
@@ -68,56 +69,56 @@
     }
   ],
   "facts": {},
-  "net_worth": 561.37,
-  "net_worth_note": "Current account balance plus credit union savings, measured on the 6th of each month.",
+  "net_worth": 1107.0,
+  "net_worth_note": "Current account balance (£687.00 today) plus credit union savings, measured on the 6th of each month, before rent leaves on the 12th.",
   "net_worth_history": [
     {
       "month": "2025-12",
-      "net_worth": 905.1
+      "net_worth": 1467.1
     },
     {
       "month": "2026-01",
-      "net_worth": 842.75
+      "net_worth": 1404.75
     },
     {
       "month": "2026-02",
-      "net_worth": 798.3
+      "net_worth": 1360.3
     },
     {
       "month": "2026-03",
-      "net_worth": 760.15
+      "net_worth": 1322.15
     },
     {
       "month": "2026-04",
-      "net_worth": 731.9
+      "net_worth": 1293.9
     },
     {
       "month": "2026-05",
-      "net_worth": 702.45
+      "net_worth": 1264.45
     },
     {
       "month": "2026-06",
-      "net_worth": 688.2
+      "net_worth": 1250.2
     },
     {
       "month": "2026-07",
-      "net_worth": 715.6
+      "net_worth": 1277.6
     },
     {
       "month": "2026-08",
-      "net_worth": 737.62
+      "net_worth": 1299.62
     },
     {
       "month": "2026-09",
-      "net_worth": 542.2
+      "net_worth": 1104.2
     },
     {
       "month": "2026-10",
-      "net_worth": 573.04
+      "net_worth": 1135.04
     },
     {
       "month": "2026-11",
-      "net_worth": 561.37
+      "net_worth": 1107.0
     }
   ]
 }

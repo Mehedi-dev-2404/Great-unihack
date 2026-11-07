@@ -31,8 +31,10 @@ It's an agent, not a chatbot. It takes actions (drafts and sends emails, fills f
 
 - **A.** YouTube Music anomaly → agent flags it → user says cancel → email to vendor sent → report saved.
 - **B.** UC child element alert. The two-child limit on Universal Credit was removed from 6 April 2026, but the user's UC still only includes 2 of their 3 children. The agent asks whether all three children live with them and are under 18 (or under 20 and in approved education) → yes → drafts the UC change-of-circumstances message/claim → report saved → asks about other eligibility.
+- **C.** Rent shortfall. Amara's £562 rent leaves on the 12th, two days before UC lands on the 14th; with her usual spending she'll be about £80 short. Fola raises it first → offers a reminder, then a top-up from her credit union savings (only if needed) → yes → report saved. With no money to move, it suggests telling the landlord early, an Alternative Payment Arrangement and council crisis support, and signposts Shelter / Citizens Advice.
 
 All benefit and council rules are **real, current UK rules** with a gov.uk source. Never invent a rule.
+
 
 ## Stack
 
@@ -86,15 +88,20 @@ Extra fields in any response are allowed; clients must ignore unknown fields.
 // GET /api/notifications → Notification[]
 { "id": "n-uc-child-element", "type": "demographic" | "financial", "title": "...", "body": "...",
   "severity": "low" | "medium" | "high", "rule_id": "uc_two_child_limit_removed" /* or */, "transaction_ids": ["t123"],
-  "suggested_action": "submit_claim" | "cancel_subscription" | "send_email" | null }
+  "suggested_action": "submit_claim" | "cancel_subscription" | "send_email" | "top_up_transfer" | null,
+  // bill-shortfall alerts only (id "n-rent-shortfall", type financial, severity high, listed first):
+  "merchant": "One Manchester", "due_date": "2026-11-12", "shortfall": 80, "bill_amount": 562.0,
+  "next_income": { "merchant": "DWP Universal Credit", "date": "2026-11-14", "amount": 1412.4 }, "reminder_set": false }
 
 // Action (pending_action in /api/chat, items in /api/actions)
-{ "id": "a-…", "type": "cancel_subscription" | "send_email" | "submit_claim" | "fill_form",
+{ "id": "a-…", "type": "cancel_subscription" | "send_email" | "submit_claim" | "fill_form" | "set_reminder" | "top_up_transfer",
   "title": "Cancel YouTube Music", "summary": "plain-English one-liner of what will happen",
   "status": "pending" | "approved" | "declined", "created_at": "ISO-8601",
   "notification_id": "n-…" | null,
   "draft": { "to": "...", "subject": "...", "body": "..." } | null,     // email drafts
   "form":  { "name": "...", "fields": { "field": "value" } } | null }   // form contents
+  // set_reminder:    form.fields = {date, label}
+  // top_up_transfer: form.fields = {from_account (a profile.savings name), to_account, max_amount, before_date, recurring: true, only_if_needed: true}
 
 // POST /api/chat
 request  { "message": "...", "session_id"?: "..." }
@@ -102,12 +109,15 @@ response { "reply": "...", "pending_action"?: Action, "profile_updates"?: { ... 
 
 // Report (approve returns one; GET /api/reports lists them newest first)
 { "id": "r-…", "action_id": "a-…", "type": "...", "title": "...", "created_at": "ISO-8601",
-  "summary": "...", "outcome": "sent" | "submitted" | "cancelled", "details": { /* the draft/form that was sent */ } }
+  "summary": "...", "outcome": "sent" | "submitted" | "cancelled" | "scheduled", "details": { /* the draft/form that was sent */ } }
 
 // GET /api/forecast?months=12
 { "current_net_worth": 812.40, "horizon_months": 12,
   "baseline":    [ { "month": "2026-12", "net_worth": 790.0 } ],   // if nothing changes
-  "with_actions": [ { "month": "2026-12", "net_worth": 1120.0 } ], // if pending/suggested actions are taken
+  "with_actions": [ { "month": "2026-12", "net_worth": 1120.0 } ], // confirmed gains only: cancellations + benefits whose rules are met
+  "with_possible": [ { "month": "2026-12", "net_worth": 1400.0 } ], // best case: also claims that still need answers
+  "monthly_uplift_from_actions": 39.81, "monthly_uplift_possible": 360.36,
+  "upcoming_risks": [ { "id": "n-rent-shortfall", "merchant": "One Manchester", "due_date": "2026-11-12", "shortfall": 80 } ],
   "assumptions": [ "Cancel YouTube Music saves £10.99/mo", "UC child element adds £303.94/mo" ] }
 ```
 

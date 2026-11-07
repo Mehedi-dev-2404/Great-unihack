@@ -1,16 +1,19 @@
 """Template action drafts (fallback when agent/brain.py is unavailable) and simulated execution."""
 from __future__ import annotations
 
+import math
 import uuid
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
-ACTION_TYPES = {"cancel_subscription", "send_email", "submit_claim", "fill_form"}
+ACTION_TYPES = {"cancel_subscription", "send_email", "submit_claim", "fill_form", "set_reminder", "top_up_transfer"}
 OUTCOMES = {
     "cancel_subscription": "cancelled",
     "send_email": "sent",
     "submit_claim": "submitted",
     "fill_form": "submitted",
+    "set_reminder": "scheduled",
+    "top_up_transfer": "scheduled",
 }
 
 
@@ -23,8 +26,71 @@ def _children_lines(profile: dict) -> str:
     return "\n".join(f"- {c.get('name')}, aged {c.get('age')}" for c in kids)
 
 
+def _nice(d: date) -> str:
+    return f"{d.strftime('%a')} {d.day} {d.strftime('%b')}"
+
+
+def shortfall_draft(action_type: str, profile: dict, notification: dict | None) -> dict:
+    """set_reminder / top_up_transfer for a bill that may bounce (n-rent-shortfall)."""
+    n = notification or {}
+    merchant = n.get("merchant") or "your bill"
+    what = "rent" if n.get("id") == "n-rent-shortfall" else f"{merchant} payment"
+    shortfall = float(n.get("shortfall") or 0)
+    bill = n.get("bill_amount")
+    try:
+        due = date.fromisoformat(n["due_date"])
+    except (KeyError, TypeError, ValueError):
+        due = None
+    due_txt = _nice(due) if due else "the due date"
+
+    if action_type == "set_reminder":
+        when = max(date.today(), due - timedelta(days=2)) if due else None
+        label = (f"{what.capitalize()} of £{bill:.2f} to {merchant} is due {due_txt}. "
+                 f"You may be about £{shortfall:.0f} short." if bill else f"{what.capitalize()} due {due_txt}.")
+        reminder = {"date": when.isoformat() if when else None, "label": label}
+        return {
+            "type": action_type,
+            "title": f"Remind me before {what} is due",
+            "summary": f"Send you a reminder on {_nice(when) if when else 'the day before'} that {what} is due {due_txt}.",
+            "reminder": reminder,
+            "draft": None,
+            "form": {"name": "Reminder", "fields": reminder},
+        }
+
+    # top_up_transfer: only from an account already on the profile, never one read out by voice
+    accounts = sorted(profile.get("savings") or [], key=lambda a: -(a.get("balance") or 0))
+    source = accounts[0] if accounts else None
+    want = math.ceil((shortfall + 10) / 10) * 10 if shortfall else 50  # small buffer, rounded to £10
+    max_amount = min(want, source.get("balance", 0)) if source else 0
+    before = (due - timedelta(days=1)) if due else None
+    transfer = {
+        "from_account": source.get("name") if source else None,
+        "to_account": "Current account",
+        "max_amount": max_amount,
+        "before_date": before.isoformat() if before else None,
+        "recurring": True,
+        "only_if_needed": True,
+    }
+    if not source:
+        summary = "There is no savings account on file to move money from."
+    else:
+        summary = (f"Move up to £{max_amount:.0f} from {source['name']} to your current account by "
+                   f"{_nice(before) if before else 'the day before'}, only if needed to cover {what}. "
+                   "It repeats each month and you can cancel any time.")
+    return {
+        "type": action_type,
+        "title": f"Top up from savings before {what}",
+        "summary": summary,
+        "transfer": transfer,
+        "draft": None,
+        "form": {"name": "Top-up transfer", "fields": transfer},
+    }
+
+
 def template_draft(action_type: str, profile: dict, notification: dict | None, notes: str | None) -> dict:
     """Return an Action without id/status/created_at."""
+    if action_type in ("set_reminder", "top_up_transfer"):
+        return shortfall_draft(action_type, profile, notification)
     name = profile.get("name", "the customer")
     n = notification or {}
     extra = ""  # drafter notes are internal; never put them in the message
@@ -152,6 +218,11 @@ def execute(action: dict) -> dict:
     if action.get("type") == "cancel_subscription":
         details["merchant"] = action.get("merchant")
         details["monthly_saving"] = action.get("monthly_value")
+    elif action.get("type") in ("set_reminder", "top_up_transfer"):
+        details["reminder"] = action.get("reminder")
+        details["transfer"] = action.get("transfer")
+        details["note_for_agent"] = ("Demo mode: this is scheduled and logged, but no real reminder or transfer is set up "
+                                     "with a bank yet. Say it is set up and logged; do not claim money has moved.")
     elif action.get("monthly_value"):
         details["estimated_monthly_value"] = action.get("monthly_value")
     ts = now_iso()

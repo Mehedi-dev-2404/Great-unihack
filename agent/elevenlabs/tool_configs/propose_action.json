@@ -18,12 +18,14 @@
             "properties": {
                 "type": {
                     "type": "string",
-                    "description": "What kind of action to draft. cancel_subscription: cancel an unwanted subscription and email the vendor. submit_claim: claim a benefit or report a change of circumstances (e.g. add a child to Universal Credit). send_email: any other email, e.g. to the council or a vendor. fill_form: fill in an official form.",
+                    "description": "What kind of action to draft. cancel_subscription: cancel an unwanted subscription and email the vendor. submit_claim: claim a benefit or report a change of circumstances (e.g. add a child to Universal Credit). send_email: any other email, e.g. to the council or a vendor. fill_form: fill in an official form. set_reminder: a reminder a couple of days before a bill that may bounce. top_up_transfer: move up to a small amount from a savings account already on the profile into the current account before that bill, only if needed.",
                     "enum": [
                         "cancel_subscription",
                         "submit_claim",
                         "send_email",
-                        "fill_form"
+                        "fill_form",
+                        "set_reminder",
+                        "top_up_transfer"
                     ]
                 },
                 "notification_id": {

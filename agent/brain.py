@@ -43,7 +43,7 @@ FALLBACK_REPLY = (
     "Your information is safe. Please try again in a moment."
 )
 
-ACTION_TYPES = ("cancel_subscription", "send_email", "submit_claim", "fill_form")
+ACTION_TYPES = ("cancel_subscription", "send_email", "submit_claim", "fill_form", "set_reminder", "top_up_transfer")
 
 # Who receives a cancellation message, and how the user can cancel themselves.
 # No email addresses: we only name a recipient descriptively unless a contact is verified.
@@ -846,6 +846,11 @@ def draft_action(action_type: str, context: dict, notification: dict | None = No
     try:
         if isinstance(notification, str):
             notification = _notification_by_id(context, notification)
+        if action_type in ("set_reminder", "top_up_transfer"):
+            from api.actions import shortfall_draft
+            notification = notification or next(
+                (n for n in context.get("notifications") or [] if n.get("shortfall")), None)
+            return shortfall_draft(action_type, context.get("profile") or {}, notification)
         if action_type == "cancel_subscription":
             return _cancel_action(context, notification, notes, merchant)
         rule = _find_rule(context, rule_id, notification, notes)
@@ -925,8 +930,9 @@ TOOLS = [
         "name": "propose_action",
         "description": "Prepare a draft action for the user to approve: a cancellation email to a vendor "
                        "(cancel_subscription), a Universal Credit or council message (send_email), a benefit "
-                       "claim or change of circumstances (submit_claim), or form contents (fill_form). This "
-                       "NEVER sends anything; the user must approve it. Returns the draft so you can "
+                       "claim or change of circumstances (submit_claim), form contents (fill_form), a reminder "
+                       "before a bill that may bounce (set_reminder), or a top-up from savings already on the "
+                       "profile before that bill (top_up_transfer). This NEVER sends or moves anything; the user must approve it. Returns the draft so you can "
                        "summarise it.",
         "input_schema": {
             "type": "object",
