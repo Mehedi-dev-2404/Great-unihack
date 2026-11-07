@@ -1,0 +1,110 @@
+{
+  "id": "u09",
+  "story": "Jamal, 52, Bradford. Stopped work in January 2026 with a serious back condition. On Universal Credit but never asked about PIP or the health element. Pays for two prescriptions a month he could get free. Small gambling deposits have been creeping up, mostly just after UC lands.",
+  "bank_knows": {
+    "first_name": "Jamal",
+    "last_name": "Hussain",
+    "dob": "1974-09-14",
+    "postcode": "BD3 9AA",
+    "council": "Bradford Council",
+    "nation": "england",
+    "preferred_language": "en",
+    "accessibility": [],
+    "accounts": [
+      {
+        "id": "u09-a1",
+        "type": "current",
+        "name": "Current account",
+        "balance": -80.0
+      }
+    ],
+    "liabilities": [],
+    "net_worth_history": [
+      {
+        "date": "2026-05-07",
+        "assets": 268.64,
+        "liabilities": 0,
+        "net_worth": 268.64
+      },
+      {
+        "date": "2026-06-07",
+        "assets": 358.62,
+        "liabilities": 0,
+        "net_worth": 358.62
+      },
+      {
+        "date": "2026-07-07",
+        "assets": 390.39,
+        "liabilities": 0,
+        "net_worth": 390.39
+      },
+      {
+        "date": "2026-08-07",
+        "assets": 274.95,
+        "liabilities": 0,
+        "net_worth": 274.95
+      },
+      {
+        "date": "2026-09-07",
+        "assets": 118.99,
+        "liabilities": 0,
+        "net_worth": 118.99
+      },
+      {
+        "date": "2026-10-07",
+        "assets": 8.41,
+        "liabilities": 0,
+        "net_worth": 8.41
+      },
+      {
+        "date": "2026-11-07",
+        "assets": -80.0,
+        "liabilities": 0,
+        "net_worth": -80.0
+      }
+    ]
+  },
+  "only_user_knows": {
+    "relationship_status": "divorced",
+    "has_partner_living_with": false,
+    "housing_tenure": "social_rent",
+    "employment_status": "unable_to_work",
+    "health_condition_affects_work": true,
+    "needs_help_daily_living": true,
+    "needs_help_getting_around": true,
+    "savings_total": 0,
+    "children": [],
+    "pays_council_tax": true,
+    "adults_in_home_not_disregarded": 0
+  },
+  "should_find": [
+    {
+      "kind": "benefit",
+      "rule_id": "nhs_health_costs",
+      "detail": "on UC with no earnings -> free prescriptions; paying £19.80/month",
+      "save_per_year": 237.6
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "pip",
+      "detail": "likely_eligible only; refer to Citizens Advice for the form",
+      "refer_out": "Citizens Advice"
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "council_tax_single_person_discount",
+      "detail": "lives alone; paying full £85"
+    },
+    {
+      "kind": "wellbeing",
+      "detail": "gambling deposits rising each month, clustered after UC day. Raise gently, no judgement; offer gambling block (with permission) and GamCare (0808 8020 133)"
+    }
+  ],
+  "should_not_find": [
+    {
+      "rule_id": "carers_allowance",
+      "why": "he isn't caring for anyone"
+    }
+  ],
+  "transactions_file": "transactions/u09_jamal.csv"
+}

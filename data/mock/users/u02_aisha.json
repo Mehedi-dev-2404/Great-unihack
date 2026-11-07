@@ -1,0 +1,130 @@
+{
+  "id": "u02",
+  "story": "Aisha, 27, Birmingham. Single mum of two (one baby born March 2026). On Universal Credit, not working. English is her second language; she prefers Somali. She never claimed Child Benefit because she thought UC covered it.",
+  "bank_knows": {
+    "first_name": "Aisha",
+    "last_name": "Warsame",
+    "dob": "1999-02-17",
+    "postcode": "B10 0AA",
+    "council": "Birmingham City Council",
+    "nation": "england",
+    "preferred_language": "so",
+    "accessibility": [
+      "low_literacy"
+    ],
+    "accounts": [
+      {
+        "id": "u02-a1",
+        "type": "current",
+        "name": "Current account",
+        "balance": 809.55
+      }
+    ],
+    "liabilities": [],
+    "net_worth_history": [
+      {
+        "date": "2026-05-07",
+        "assets": -40.0,
+        "liabilities": 0,
+        "net_worth": -40.0
+      },
+      {
+        "date": "2026-06-07",
+        "assets": 198.66,
+        "liabilities": 0,
+        "net_worth": 198.66
+      },
+      {
+        "date": "2026-07-07",
+        "assets": 366.9,
+        "liabilities": 0,
+        "net_worth": 366.9
+      },
+      {
+        "date": "2026-08-07",
+        "assets": 554.93,
+        "liabilities": 0,
+        "net_worth": 554.93
+      },
+      {
+        "date": "2026-09-07",
+        "assets": 464.24,
+        "liabilities": 0,
+        "net_worth": 464.24
+      },
+      {
+        "date": "2026-10-07",
+        "assets": 731.17,
+        "liabilities": 0,
+        "net_worth": 731.17
+      },
+      {
+        "date": "2026-11-07",
+        "assets": 809.55,
+        "liabilities": 0,
+        "net_worth": 809.55
+      }
+    ]
+  },
+  "only_user_knows": {
+    "children": [
+      {
+        "dob": "2021-06-01",
+        "lives_with_you": true
+      },
+      {
+        "dob": "2026-03-10",
+        "lives_with_you": true
+      }
+    ],
+    "relationship_status": "single",
+    "has_partner_living_with": false,
+    "housing_tenure": "private_rent",
+    "monthly_rent": 750,
+    "employment_status": "unemployed",
+    "savings_total": 0,
+    "immigration_status": "indefinite_leave",
+    "name_on_electricity_bill": true,
+    "pays_council_tax": true,
+    "adults_in_home_not_disregarded": 0
+  },
+  "should_find": [
+    {
+      "kind": "benefit",
+      "rule_id": "child_benefit",
+      "detail": "no HMRC CHB in transactions; 2 children",
+      "gain_per_week": 44.95
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "healthy_start",
+      "detail": "on UC, £0 earnings, child under 4"
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "council_tax_single_person_discount",
+      "detail": "only adult; paying full £92",
+      "save_per_year": 230
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "warm_home_discount",
+      "detail": "prepay meter is fine; on UC"
+    },
+    {
+      "kind": "accessibility",
+      "detail": "should speak Somali and use simple words"
+    }
+  ],
+  "should_not_find": [
+    {
+      "rule_id": "tax_free_childcare",
+      "why": "not working, and on UC"
+    },
+    {
+      "rule_id": "uc_childcare",
+      "why": "not in paid work"
+    }
+  ],
+  "transactions_file": "transactions/u02_aisha.csv"
+}

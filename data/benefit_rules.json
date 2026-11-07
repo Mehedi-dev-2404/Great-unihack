@@ -1,0 +1,514 @@
+{
+  "meta": {
+    "version": "0.1.0",
+    "jurisdiction_default": "england",
+    "rates_period": "2026-27 (as shown on gov.uk on 2026-11-07)",
+    "last_checked": "2026-11-07",
+    "disclaimer": "Guidance, not regulated financial or legal advice. Amounts are from gov.uk on last_checked; the agent must always show source_url and say 'check the official page before you rely on this'.",
+    "engine_contract": {
+      "statuses": ["eligible", "likely_eligible", "need_info", "not_eligible"],
+      "how_it_works": "For each rule: evaluate `requires` (all must pass) and `excludes` (any passing = not_eligible). If a referenced fact is missing from the profile, return need_info with missing_facts = those fact keys. The LLM ONLY asks the survey_question of the missing facts and explains the result; it never decides eligibility itself.",
+      "operators": {
+        "eq": "fact == value",
+        "neq": "fact != value",
+        "in": "fact is one of value[]",
+        "contains": "fact (array) includes value",
+        "contains_any": "fact (array) includes any of value[]",
+        "gte": "fact >= value",
+        "lte": "fact <= value",
+        "gt": "fact > value",
+        "lt": "fact < value",
+        "true": "fact is true",
+        "false": "fact is false"
+      },
+      "ethics_guardrail": "Facts with sensitivity 'special_category' (ethnicity, religion, health detail, sexual_orientation) are NEVER used in state-benefit rules. They may only be used by rules with category 'opt_in_opportunity', and only if consent.opportunities_matching is true."
+    }
+  },
+
+  "facts": {
+    "dob":                     { "type": "date",   "survey_question": "What's your date of birth?", "sensitivity": "personal", "why_we_ask": "Many benefits depend on age, including pension-age help." },
+    "nation":                  { "type": "enum",   "values": ["england", "wales", "scotland", "northern_ireland"], "survey_question": "Which part of the UK do you live in?", "sensitivity": "personal", "why_we_ask": "Some schemes only exist in some nations." },
+    "postcode":                { "type": "string", "survey_question": "What's your postcode?", "sensitivity": "personal", "why_we_ask": "To find your council's local help schemes." },
+    "has_partner_living_with": { "type": "bool",   "survey_question": "Do you live with a partner?", "sensitivity": "personal", "why_we_ask": "Universal Credit and Pension Credit look at the whole household." },
+    "partner_dob":             { "type": "date",   "survey_question": "What's your partner's date of birth?", "sensitivity": "personal", "why_we_ask": "Affects your Universal Credit standard amount." },
+    "relationship_status":     { "type": "enum",   "values": ["single", "married", "civil_partnership", "cohabiting", "separated", "divorced", "widowed"], "survey_question": "What's your relationship status?", "sensitivity": "personal", "why_we_ask": "Separated or widowed people can be entitled to extra help." },
+    "children":                { "type": "array",  "item": { "dob": "date", "disabled": "bool", "in_approved_education": "bool", "lives_with_you": "bool" }, "survey_question": "Do you have any children who live with you? What are their dates of birth?", "sensitivity": "personal", "why_we_ask": "Child Benefit, Universal Credit child amounts, school meals and childcare help all depend on this." },
+    "pregnant_weeks":          { "type": "int",    "survey_question": "Are you or your partner pregnant? How many weeks?", "sensitivity": "special_category", "why_we_ask": "Healthy Start can help from 10 weeks of pregnancy.", "skippable": true },
+    "housing_tenure":          { "type": "enum",   "values": ["private_rent", "social_rent", "own_mortgage", "own_outright", "temporary_accommodation", "living_with_family"], "survey_question": "Do you rent, own, or live with family?", "sensitivity": "personal", "why_we_ask": "Help with housing costs and how much you can earn before Universal Credit drops." },
+    "monthly_rent":            { "type": "money",  "survey_question": "How much is your rent each month?", "sensitivity": "financial", "why_we_ask": "Housing help in Universal Credit." },
+    "pays_council_tax":        { "type": "bool",   "survey_question": "Is your name on the council tax bill?", "sensitivity": "personal", "why_we_ask": "Council tax discounts." },
+    "adults_in_home_not_disregarded": { "type": "int", "survey_question": "Apart from you, how many adults aged 18+ live with you who aren't full-time students or carers?", "sensitivity": "personal", "why_we_ask": "If it's zero, you get 25% off council tax." },
+    "name_on_electricity_bill": { "type": "bool",  "survey_question": "Is your name (or your partner's) on the electricity bill?", "sensitivity": "personal", "why_we_ask": "Needed for the £150 Warm Home Discount." },
+    "employment_status":       { "type": "enum",   "values": ["employed", "self_employed", "unemployed", "student_full_time", "student_part_time", "retired", "unable_to_work"], "survey_question": "Are you working at the moment?", "sensitivity": "personal", "why_we_ask": "Changes which help fits you." },
+    "monthly_take_home_pay":   { "type": "money",  "survey_question": "Roughly how much do you take home from work each month?", "sensitivity": "financial", "why_we_ask": "Universal Credit goes down 55p for each £1 earned above your allowance.", "derivable_from_transactions": true },
+    "partner_monthly_take_home_pay": { "type": "money", "survey_question": "And your partner's monthly take-home pay?", "sensitivity": "financial", "why_we_ask": "Household income matters for Universal Credit." },
+    "annual_adjusted_net_income": { "type": "money", "survey_question": "What's your yearly income before tax?", "sensitivity": "financial", "why_we_ask": "Child Benefit is taxed back above £60,000.", "derivable_from_transactions": true },
+    "savings_total":           { "type": "money",  "survey_question": "Roughly how much do you and your partner have in savings and investments?", "sensitivity": "financial", "why_we_ask": "Universal Credit stops above £16,000 and is reduced above £6,000.", "derivable_from_transactions": true },
+    "benefits_received":       { "type": "array",  "values": ["universal_credit", "child_benefit", "pension_credit", "pip", "dla", "attendance_allowance", "carers_allowance", "esa_income_related", "esa_new_style", "jsa", "housing_benefit", "income_support", "council_tax_reduction"], "survey_question": "Which benefits do you get now, if any?", "sensitivity": "financial", "why_we_ask": "So we don't suggest something you already get, and because some benefits unlock others.", "derivable_from_transactions": true },
+    "health_condition_affects_work": { "type": "bool", "survey_question": "Do you have a health condition or disability that makes daily life or work harder?", "sensitivity": "special_category", "why_we_ask": "You may be able to get PIP or extra Universal Credit. You can skip this.", "skippable": true },
+    "needs_help_daily_living": { "type": "bool",   "survey_question": "Do you need help with things like washing, cooking, dressing or managing medicines?", "sensitivity": "special_category", "why_we_ask": "This is what PIP looks at.", "skippable": true },
+    "needs_help_getting_around": { "type": "bool", "survey_question": "Is it hard for you to plan a journey or move around?", "sensitivity": "special_category", "why_we_ask": "PIP mobility part.", "skippable": true },
+    "cares_hours_per_week":    { "type": "int",    "survey_question": "Do you look after someone who's ill or disabled? About how many hours a week?", "sensitivity": "personal", "why_we_ask": "Carer's Allowance needs 35+ hours a week." },
+    "cared_for_gets_qualifying_benefit": { "type": "bool", "survey_question": "Does the person you look after get PIP daily living, Attendance Allowance, or the middle/high care rate of DLA?", "sensitivity": "personal", "why_we_ask": "Carer's Allowance requires this." },
+    "weekly_earnings_after_deductions": { "type": "money", "survey_question": "How much do you earn a week after tax and National Insurance?", "sensitivity": "financial", "why_we_ask": "Carer's Allowance limit is £204 a week.", "derivable_from_transactions": true },
+    "immigration_status":      { "type": "enum",   "values": ["british_or_irish", "settled_status", "pre_settled_status", "indefinite_leave", "limited_leave_nrpf", "asylum_seeker", "prefer_not_to_say"], "survey_question": "Do you have British citizenship or settled status? You can skip this.", "sensitivity": "special_category", "why_we_ask": "Some help depends on immigration status. We will never share this.", "skippable": true },
+    "is_veteran":              { "type": "bool",   "survey_question": "Have you served in the armed forces?", "sensitivity": "personal", "why_we_ask": "Veterans can get extra support.", "skippable": true },
+    "is_care_leaver":          { "type": "bool",   "survey_question": "Were you in care as a child?", "sensitivity": "special_category", "why_we_ask": "Many councils give care leavers council tax help and grants.", "skippable": true },
+    "ethnicity":               { "type": "enum",   "values": ["asian", "black", "mixed", "white", "other", "prefer_not_to_say"], "survey_question": "Optional: how would you describe your ethnic background? This is only used to find opt-in scholarships, grants or mentoring aimed at under-represented groups. It never affects any benefit decision.", "sensitivity": "special_category", "why_we_ask": "Some charities and universities run schemes for under-represented groups.", "skippable": true, "requires_consent": "opportunities_matching" },
+    "preferred_language":      { "type": "string", "survey_question": "Which language would you like me to speak?", "sensitivity": "personal", "why_we_ask": "So I can talk to you in your language." },
+    "accessibility_needs":     { "type": "array",  "values": ["low_vision", "low_literacy", "hearing", "cognitive", "none"], "survey_question": "Would it help if I read everything out loud or used simpler words?", "sensitivity": "personal", "why_we_ask": "So the app works the way you need." }
+  },
+
+  "derived_facts": {
+    "age":                       "years between dob and today",
+    "partner_age":               "years between partner_dob and today",
+    "reached_state_pension_age": "age >= 66 (APPROX: SPA is rising to 67 between 2026 and 2028; real build should use gov.uk/state-pension-age)",
+    "children_count":            "count(children where lives_with_you)",
+    "children_under_4_count":    "count(children age < 4)",
+    "children_under_12_count":   "count(children age < 12)",
+    "children_school_age_count": "count(children age 4..16)",
+    "has_disabled_child":        "any(children.disabled)",
+    "child_benefit_eligible_children": "count(children age < 16, or age < 20 and in_approved_education)",
+    "household_monthly_take_home": "monthly_take_home_pay + (partner_monthly_take_home_pay or 0)"
+  },
+
+  "rules": [
+    {
+      "id": "universal_credit",
+      "title": "Universal Credit",
+      "category": "state_benefit",
+      "summary": "Monthly payment to help with living costs if you're on a low income or out of work.",
+      "requires": [
+        { "fact": "age", "op": "gte", "value": 18 },
+        { "fact": "reached_state_pension_age", "op": "false" },
+        { "fact": "savings_total", "op": "lte", "value": 16000 }
+      ],
+      "excludes": [
+        { "fact": "benefits_received", "op": "contains", "value": "universal_credit" },
+        { "fact": "immigration_status", "op": "in", "value": ["limited_leave_nrpf", "asylum_seeker"] }
+      ],
+      "value": {
+        "unit": "GBP_per_month",
+        "standard_allowance": { "single_under_25": 338.58, "single_25_plus": 424.90, "couple_both_under_25": 528.34, "couple_one_25_plus": 666.97 },
+        "work_allowance": { "with_housing_help": 427, "without_housing_help": 710, "only_if": "responsible for a child OR health condition affecting work" },
+        "taper": "Payment drops 55p for every £1 earned above the work allowance",
+        "savings_deduction": "£4.35/month for every £250 (or part) between £6,000 and £16,000"
+      },
+      "estimate_formula": "standard_allowance + child_elements + childcare + housing - max(0, household_monthly_take_home - work_allowance) * 0.55 - savings_deduction",
+      "how_to_claim": ["Create an account at gov.uk/apply-universal-credit", "Have ID, bank details, rent agreement and payslips ready", "Book and attend the interview at the Jobcentre"],
+      "agent_actions": ["fill_form", "add_to_calendar"],
+      "not_eligible_explanations": {
+        "age": "Universal Credit is for people aged 18 or over (with some exceptions at 16-17).",
+        "reached_state_pension_age": "You've reached State Pension age, so Pension Credit is the right benefit to look at instead.",
+        "savings_total": "Universal Credit isn't available if your household has more than £16,000 in savings.",
+        "immigration_status": "Your current immigration status means you can't claim public funds. Please speak to a free immigration adviser or Citizens Advice."
+      },
+      "source_url": "https://www.gov.uk/universal-credit/what-youll-get",
+      "verified": true
+    },
+    {
+      "id": "uc_child_element",
+      "title": "Universal Credit child amount (every child, no two-child limit)",
+      "category": "state_benefit",
+      "summary": "Extra Universal Credit for each child. Since 6 April 2026 the two-child limit is gone: you get it for every child.",
+      "requires": [
+        { "fact": "benefits_received", "op": "contains", "value": "universal_credit" },
+        { "fact": "children_count", "op": "gte", "value": 1 }
+      ],
+      "excludes": [],
+      "value": {
+        "unit": "GBP_per_month",
+        "per_child": 303.94,
+        "extra_first_child_born_before_2017_04_06": 47.94,
+        "disabled_child_addition": { "lower": 164.79, "higher": 514.71 }
+      },
+      "news_item": {
+        "headline": "Two-child limit has ended",
+        "body": "From 6 April 2026, Universal Credit pays the child amount for every child, not just the first two. Existing claims should update automatically; if yours hasn't, report a change in your journal.",
+        "effective": "2026-04-06",
+        "trigger_if": [{ "fact": "children_count", "op": "gte", "value": 3 }, { "fact": "benefits_received", "op": "contains", "value": "universal_credit" }],
+        "check_transactions": "Compare UC payment amount before vs after April 2026; if it did not rise by roughly £303.94 per extra child, flag 'payment may be wrong'.",
+        "source_url": "https://www.gov.uk/government/statistics/universal-credit-claimants-statistics-on-the-two-child-limit-policy-april-2026"
+      },
+      "how_to_claim": ["Should be automatic from April 2026", "If not, write in your Universal Credit journal: 'Please apply the child element for all my children following removal of the two-child limit'"],
+      "agent_actions": ["draft_journal_message", "send_email"],
+      "not_eligible_explanations": {
+        "benefits_received": "This extra amount is part of Universal Credit, so you'd need to claim Universal Credit first."
+      },
+      "source_url": "https://www.gov.uk/universal-credit/what-youll-get",
+      "verified": true
+    },
+    {
+      "id": "uc_childcare",
+      "title": "Universal Credit childcare costs",
+      "category": "state_benefit",
+      "summary": "Universal Credit can pay back up to 85% of childcare costs if you work.",
+      "requires": [
+        { "fact": "benefits_received", "op": "contains", "value": "universal_credit" },
+        { "fact": "children_under_12_count", "op": "gte", "value": 1 },
+        { "fact": "employment_status", "op": "in", "value": ["employed", "self_employed"] }
+      ],
+      "excludes": [],
+      "value": { "unit": "GBP_per_month", "percent": 85, "cap_one_child": 1071.09, "cap_two_plus": 1836.16 },
+      "how_to_claim": ["Report childcare costs in your Universal Credit journal", "Upload the childcare receipt or invoice"],
+      "agent_actions": ["draft_journal_message"],
+      "not_eligible_explanations": {
+        "employment_status": "Childcare help in Universal Credit is for people in paid work (or starting a job soon)."
+      },
+      "source_url": "https://www.gov.uk/universal-credit/what-youll-get",
+      "verified": true
+    },
+    {
+      "id": "child_benefit",
+      "title": "Child Benefit",
+      "category": "state_benefit",
+      "summary": "Weekly payment for anyone responsible for a child under 16 (or under 20 in approved education).",
+      "requires": [
+        { "fact": "child_benefit_eligible_children", "op": "gte", "value": 1 }
+      ],
+      "excludes": [
+        { "fact": "benefits_received", "op": "contains", "value": "child_benefit" }
+      ],
+      "value": {
+        "unit": "GBP_per_week",
+        "eldest_child": 27.05,
+        "each_additional_child": 17.90,
+        "high_income_charge": "If either parent's income is over £60,000 some is taxed back; over £80,000 it is all taxed back. Still worth claiming for National Insurance credits."
+      },
+      "how_to_claim": ["Claim online at gov.uk/child-benefit/how-to-claim", "Need the child's birth certificate details"],
+      "agent_actions": ["fill_form"],
+      "not_eligible_explanations": {
+        "child_benefit_eligible_children": "Child Benefit is for children under 16, or under 20 if they're in approved education or training."
+      },
+      "source_url": "https://www.gov.uk/child-benefit/what-youll-get",
+      "verified": true
+    },
+    {
+      "id": "pension_credit",
+      "title": "Pension Credit",
+      "category": "state_benefit",
+      "summary": "Tops up weekly income for people over State Pension age. Also unlocks other help.",
+      "requires": [
+        { "fact": "reached_state_pension_age", "op": "true" },
+        { "fact": "nation", "op": "in", "value": ["england", "wales", "scotland"] }
+      ],
+      "excludes": [
+        { "fact": "benefits_received", "op": "contains", "value": "pension_credit" }
+      ],
+      "value": {
+        "unit": "GBP_per_week",
+        "tops_up_single_to": 238.00,
+        "tops_up_couple_to": 363.25,
+        "savings_rule": "Savings up to £10,000 ignored; each £500 above counts as £1/week income",
+        "unlocks": ["free TV licence if 75+", "Cold Weather Payments", "NHS health cost help", "Warm Home Discount", "Council Tax Reduction"]
+      },
+      "how_to_claim": ["Apply online at gov.uk/pension-credit/how-to-claim or call the Pension Credit claim line"],
+      "agent_actions": ["fill_form"],
+      "not_eligible_explanations": {
+        "reached_state_pension_age": "Pension Credit is only for people who've reached State Pension age."
+      },
+      "source_url": "https://www.gov.uk/pension-credit/what-youll-get",
+      "verified": true
+    },
+    {
+      "id": "pip",
+      "title": "Personal Independence Payment (PIP)",
+      "category": "state_benefit",
+      "summary": "Weekly payment for extra costs of a long-term health condition or disability. Not affected by income or savings.",
+      "requires": [
+        { "fact": "age", "op": "gte", "value": 16 },
+        { "fact": "reached_state_pension_age", "op": "false" },
+        { "fact": "health_condition_affects_work", "op": "true" }
+      ],
+      "requires_any": [
+        { "fact": "needs_help_daily_living", "op": "true" },
+        { "fact": "needs_help_getting_around", "op": "true" }
+      ],
+      "excludes": [
+        { "fact": "benefits_received", "op": "contains_any", "value": ["pip", "dla"] }
+      ],
+      "result_cap": "likely_eligible",
+      "value": {
+        "unit": "GBP_per_week",
+        "daily_living": { "standard": 76.70, "enhanced": 114.60 },
+        "mobility": { "standard": 30.30, "enhanced": 80.00 }
+      },
+      "how_to_claim": ["Call the PIP new claims line", "You'll get a 'How your disability affects you' form", "Usually an assessment follows"],
+      "agent_actions": ["prep_answers_for_form", "add_to_calendar"],
+      "refer_out": "PIP decisions are made by assessment. For help with the form, contact Citizens Advice or a local disability advice service.",
+      "not_eligible_explanations": {
+        "reached_state_pension_age": "PIP is for under State Pension age; Attendance Allowance is the equivalent after that."
+      },
+      "source_url": "https://www.gov.uk/pip/how-much-youll-get",
+      "verified": true
+    },
+    {
+      "id": "carers_allowance",
+      "title": "Carer's Allowance",
+      "category": "state_benefit",
+      "summary": "Weekly payment if you care for someone 35+ hours a week.",
+      "requires": [
+        { "fact": "age", "op": "gte", "value": 16 },
+        { "fact": "cares_hours_per_week", "op": "gte", "value": 35 },
+        { "fact": "cared_for_gets_qualifying_benefit", "op": "true" },
+        { "fact": "weekly_earnings_after_deductions", "op": "lte", "value": 204 }
+      ],
+      "excludes": [
+        { "fact": "employment_status", "op": "eq", "value": "student_full_time" },
+        { "fact": "benefits_received", "op": "contains", "value": "carers_allowance" }
+      ],
+      "value": { "unit": "GBP_per_week", "amount": 86.45, "also": "If on Universal Credit, you may also get the carer element: £209.34/month" },
+      "how_to_claim": ["Apply online at gov.uk/carers-allowance/how-to-claim"],
+      "agent_actions": ["fill_form"],
+      "warning": "Carer's Allowance can reduce the cared-for person's benefits. Agent must say this before proposing a claim.",
+      "not_eligible_explanations": {
+        "cares_hours_per_week": "Carer's Allowance needs at least 35 hours of caring a week.",
+        "cared_for_gets_qualifying_benefit": "The person you care for needs to get a qualifying benefit like PIP daily living or Attendance Allowance.",
+        "weekly_earnings_after_deductions": "Carer's Allowance has an earnings limit of £204 a week after tax and expenses.",
+        "employment_status": "You can't get Carer's Allowance while in full-time education."
+      },
+      "source_url": "https://www.gov.uk/carers-allowance/eligibility",
+      "verified": true
+    },
+    {
+      "id": "council_tax_single_person_discount",
+      "title": "Council Tax single person discount (25%)",
+      "category": "discount",
+      "summary": "25% off council tax if no other non-disregarded adult lives with you.",
+      "requires": [
+        { "fact": "pays_council_tax", "op": "true" },
+        { "fact": "adults_in_home_not_disregarded", "op": "eq", "value": 0 }
+      ],
+      "excludes": [],
+      "value": { "unit": "percent_off_council_tax", "amount": 25, "estimate_from_transactions": "25% of the monthly council tax direct debit" },
+      "how_to_claim": ["Apply on your council's website"],
+      "agent_actions": ["send_email", "fill_form"],
+      "transaction_signal": "Council tax payments are steady AND profile says lives alone AND no discount visible (amount unchanged) → suggest.",
+      "not_eligible_explanations": {
+        "adults_in_home_not_disregarded": "The discount is only for homes where you're the only adult who counts. Students, under-18s and live-in carers don't count."
+      },
+      "source_url": "https://www.gov.uk/council-tax/who-has-to-pay",
+      "verified": true
+    },
+    {
+      "id": "council_tax_reduction",
+      "title": "Council Tax Reduction",
+      "category": "local_scheme",
+      "summary": "Each council runs its own scheme to cut council tax for people on low incomes or benefits.",
+      "requires": [
+        { "fact": "pays_council_tax", "op": "true" }
+      ],
+      "requires_any": [
+        { "fact": "benefits_received", "op": "contains_any", "value": ["universal_credit", "pension_credit", "esa_income_related", "jsa", "income_support"] },
+        { "fact": "household_monthly_take_home", "op": "lt", "value": 1500 }
+      ],
+      "excludes": [
+        { "fact": "benefits_received", "op": "contains", "value": "council_tax_reduction" }
+      ],
+      "result_cap": "likely_eligible",
+      "value": { "unit": "varies_by_council", "note": "Amount depends on your council's scheme. The £1,500 income trigger is OUR heuristic, not a gov.uk rule." },
+      "how_to_claim": ["Apply on your council's website (find it from your postcode)"],
+      "agent_actions": ["send_email", "fill_form"],
+      "source_url": "https://www.gov.uk/council-tax-reduction",
+      "verified": false
+    },
+    {
+      "id": "warm_home_discount",
+      "title": "Warm Home Discount (£150)",
+      "category": "discount",
+      "summary": "£150 off your electricity bill for winter 2026-27. Usually automatic.",
+      "requires": [
+        { "fact": "nation", "op": "in", "value": ["england", "wales"] },
+        { "fact": "benefits_received", "op": "contains_any", "value": ["universal_credit", "housing_benefit", "esa_income_related", "pension_credit"] },
+        { "fact": "name_on_electricity_bill", "op": "true" }
+      ],
+      "excludes": [],
+      "value": { "unit": "GBP_one_off", "amount": 150, "eligibility_date": "2026-08-23", "letters_sent": "late Oct 2026 to early Jan 2027", "applied_by": "2027-03-31" },
+      "how_to_claim": ["Usually automatic", "If you get a letter asking for more info, call the helpline by 26 February 2027"],
+      "agent_actions": ["add_to_calendar"],
+      "transaction_signal": "If eligible and no £150 credit seen on the energy supplier account by Feb 2027 → remind user to call helpline.",
+      "not_eligible_explanations": {
+        "benefits_received": "Warm Home Discount needs one of: Universal Credit, Housing Benefit, income-related ESA or Pension Credit on 23 August 2026.",
+        "name_on_electricity_bill": "Your name (or your partner's) needs to be on the electricity bill."
+      },
+      "source_url": "https://www.gov.uk/the-warm-home-discount-scheme/if-you-live-in-england-and-wales",
+      "verified": true
+    },
+    {
+      "id": "free_school_meals",
+      "title": "Free school meals",
+      "category": "state_benefit",
+      "summary": "From September 2026, every child in a Universal Credit family in England gets free school meals, whatever your income.",
+      "requires": [
+        { "fact": "nation", "op": "eq", "value": "england" },
+        { "fact": "children_school_age_count", "op": "gte", "value": 1 },
+        { "fact": "benefits_received", "op": "contains_any", "value": ["universal_credit", "esa_income_related", "pension_credit"] }
+      ],
+      "excludes": [],
+      "value": { "unit": "in_kind", "estimate_GBP_per_child_per_year": 500, "estimate_note": "OUR rough estimate (~£2.60 x 190 days); not a gov.uk figure", "also_unlocks": "Holiday Activities and Food programme" },
+      "news_item": {
+        "headline": "Free school meals now for all Universal Credit families",
+        "body": "From September 2026, the £7,400 income limit is gone. If you get Universal Credit, your school-age children can get free school meals. You still need to apply through your council.",
+        "effective": "2026-09-01",
+        "trigger_if": [{ "fact": "children_school_age_count", "op": "gte", "value": 1 }, { "fact": "benefits_received", "op": "contains", "value": "universal_credit" }],
+        "check_transactions": "Recurring payments to a school catering provider (e.g. ParentPay) after Sept 2026 → user is paying for meals they may get free.",
+        "source_url": "https://www.gov.uk/apply-free-school-meals"
+      },
+      "how_to_claim": ["Apply through your local council website"],
+      "agent_actions": ["send_email", "fill_form"],
+      "source_url": "https://www.gov.uk/apply-free-school-meals",
+      "verified": true
+    },
+    {
+      "id": "healthy_start",
+      "title": "Healthy Start card",
+      "category": "state_benefit",
+      "summary": "Money on a card every 4 weeks for milk, fruit, veg and formula if pregnant (10+ weeks) or with a child under 4.",
+      "requires": [
+        { "fact": "nation", "op": "in", "value": ["england", "wales", "northern_ireland"] },
+        { "fact": "benefits_received", "op": "contains_any", "value": ["universal_credit", "pension_credit"] },
+        { "fact": "household_monthly_take_home", "op": "lte", "value": 408 }
+      ],
+      "requires_any": [
+        { "fact": "children_under_4_count", "op": "gte", "value": 1 },
+        { "fact": "pregnant_weeks", "op": "gt", "value": 10 }
+      ],
+      "excludes": [],
+      "value": { "unit": "GBP_per_week", "amount": null, "note": "Weekly amount NOT confirmed on healthystart.nhs.uk during research; check 'Your payments' page before demo" },
+      "how_to_claim": ["Apply at healthystart.nhs.uk/how-to-apply"],
+      "agent_actions": ["fill_form"],
+      "not_eligible_explanations": {
+        "household_monthly_take_home": "Healthy Start through Universal Credit needs family take-home pay from work of £408 a month or less."
+      },
+      "source_url": "https://www.healthystart.nhs.uk/how-to-apply/",
+      "verified": "partial"
+    },
+    {
+      "id": "tax_free_childcare",
+      "title": "Tax-Free Childcare",
+      "category": "state_benefit",
+      "summary": "For every £8 you pay into the account, the government adds £2. Up to £2,000 a year per child.",
+      "requires": [
+        { "fact": "employment_status", "op": "in", "value": ["employed", "self_employed"] },
+        { "fact": "children_under_12_count", "op": "gte", "value": 1 }
+      ],
+      "excludes": [
+        { "fact": "benefits_received", "op": "contains", "value": "universal_credit" }
+      ],
+      "value": { "unit": "GBP_per_year_per_child", "max": 2000, "max_disabled_child": 4000, "rate": "£2 per £8 paid in" },
+      "how_to_claim": ["Apply at gov.uk/apply-for-tax-free-childcare"],
+      "agent_actions": ["fill_form"],
+      "not_eligible_explanations": {
+        "benefits_received": "You can't use Tax-Free Childcare at the same time as Universal Credit. UC childcare (up to 85%) is usually better; I can compare both."
+      },
+      "notes": "UC exclusion is a well-known rule but was NOT confirmed on the fetched page; verify.",
+      "source_url": "https://www.gov.uk/tax-free-childcare",
+      "verified": "partial"
+    },
+    {
+      "id": "help_to_save",
+      "title": "Help to Save",
+      "category": "savings_scheme",
+      "summary": "Save £1-£50 a month and get a 50% bonus from the government.",
+      "requires": [
+        { "fact": "benefits_received", "op": "contains", "value": "universal_credit" },
+        { "fact": "employment_status", "op": "in", "value": ["employed", "self_employed"] }
+      ],
+      "excludes": [],
+      "result_cap": "likely_eligible",
+      "value": { "unit": "GBP", "max_monthly_deposit": 50, "bonus": "50p per £1 saved, paid at year 2 and year 4", "max_bonus_4_years": 1200 },
+      "how_to_claim": ["Apply at gov.uk/get-help-savings-low-income"],
+      "agent_actions": ["fill_form"],
+      "forecast_hook": "Use the forecast to pick a monthly amount that never pushes the balance below a safety buffer.",
+      "notes": "Exact UC earnings threshold not shown on fetched page; capped at likely_eligible.",
+      "source_url": "https://www.gov.uk/get-help-savings-low-income",
+      "verified": "partial"
+    },
+    {
+      "id": "nhs_health_costs",
+      "title": "Free prescriptions, dental and glasses (NHS help with health costs)",
+      "category": "state_benefit",
+      "summary": "Some benefits give you full help automatically. Otherwise the NHS Low Income Scheme can help if savings are under £16,000.",
+      "requires": [
+        { "fact": "savings_total", "op": "lte", "value": 16000 }
+      ],
+      "excludes": [],
+      "result_cap": "likely_eligible",
+      "value": { "unit": "in_kind", "covers": ["prescriptions", "dental", "sight tests and glasses", "travel to NHS treatment", "wigs and fabric supports"] },
+      "transaction_signal": "Payments to pharmacies or dentists while on UC/Pension Credit → user may be paying for something free.",
+      "how_to_claim": ["If on a qualifying benefit, show proof at the pharmacy or dentist", "Otherwise apply for the NHS Low Income Scheme (HC1 form)"],
+      "agent_actions": ["fill_form"],
+      "source_url": "https://www.nhsbsa.nhs.uk/nhs-low-income-scheme",
+      "verified": "partial"
+    },
+    {
+      "id": "broadband_social_tariff",
+      "title": "Cheap broadband and mobile (social tariff)",
+      "category": "social_tariff",
+      "summary": "Broadband and phone deals from £10-£24 a month for people on Universal Credit and some other benefits.",
+      "requires": [
+        { "fact": "benefits_received", "op": "contains_any", "value": ["universal_credit", "pension_credit", "esa_income_related", "jsa", "income_support"] }
+      ],
+      "excludes": [],
+      "value": { "unit": "GBP_per_month", "price_range": [10, 24], "examples": [
+        { "provider": "O2 Essential Plan", "price": 10 },
+        { "provider": "EE Basics", "price": 12 },
+        { "provider": "Hyperoptic Fair Fibre Fast", "price": 12 },
+        { "provider": "Virgin Media Essential Broadband", "price": 12.50 },
+        { "provider": "Sky Full Fibre 75", "price": 24 }
+      ] },
+      "transaction_signal": "Recurring broadband/mobile payment > £25/month → estimated saving = current - cheapest social tariff from same provider.",
+      "how_to_claim": ["Call your current provider and ask for their social tariff; no exit fee to switch within the same provider in most cases"],
+      "agent_actions": ["send_email"],
+      "source_url": "https://www.ofcom.org.uk/phones-and-broadband/saving-money/social-tariffs",
+      "verified": true
+    },
+    {
+      "id": "crisis_resilience_fund",
+      "title": "Crisis and Resilience Fund (council emergency help)",
+      "category": "local_scheme",
+      "summary": "Council fund (April 2026 to March 2029) for emergencies: food, energy, rent shortfalls. Replaced the Household Support Fund.",
+      "requires": [
+        { "fact": "nation", "op": "eq", "value": "england" }
+      ],
+      "trigger_from_forecast": "Forecast shows balance < 0 before next income, OR essential bill (rent/energy) at risk.",
+      "excludes": [],
+      "result_cap": "likely_eligible",
+      "value": { "unit": "varies_by_council" },
+      "how_to_claim": ["Apply on your council's website; rules differ by council"],
+      "agent_actions": ["send_email", "fill_form"],
+      "source_url": "https://www.peterborough.gov.uk/money-and-benefits/the-crisis-and-resilience-fund",
+      "verified": "partial"
+    },
+    {
+      "id": "opt_in_targeted_opportunities",
+      "title": "Opt-in opportunities for under-represented groups",
+      "category": "opt_in_opportunity",
+      "summary": "Some universities, charities and employers lawfully run scholarships, bursaries, grants and mentoring for under-represented groups (Equality Act 2010 positive action, ss.158-159). These are NOT government benefits.",
+      "requires": [
+        { "fact": "consent.opportunities_matching", "op": "true" }
+      ],
+      "uses_facts": ["ethnicity", "is_care_leaver", "is_veteran", "health_condition_affects_work", "age", "employment_status"],
+      "excludes": [],
+      "result_cap": "likely_eligible",
+      "value": { "unit": "varies" },
+      "catalogue": "data/opportunities.json (TO BUILD: each entry must have a real source_url and a verified date; do not invent programmes)",
+      "example_shape": { "id": "ucl_laws_phd_scholarship", "provider": "UCL Laws", "type": "scholarship", "targets": ["ethnicity:black", "ethnicity:asian", "ethnicity:mixed"], "also_requires": ["financial_need", "uk_fee_status"], "source_url": "https://www.ucl.ac.uk/laws/news/2021/sep/ucl-laws-launches-new-research-opportunity-phd-scholarship-underrepresented-bame-groups", "verified": "2021 announcement; check if still open" },
+      "agent_rules": [
+        "Never say a state benefit pays more because of ethnicity, religion or sexual orientation: none do, and it would be unlawful.",
+        "Only ask about ethnicity after explaining it's optional and only used for opt-in opportunities.",
+        "User can delete this fact at any time."
+      ],
+      "source_url": "https://www.equalityhumanrights.com/england-chapter-8-positive-action",
+      "verified": "partial"
+    }
+  ],
+
+  "refer_out": [
+    { "when": ["debt_over_income", "bailiffs", "priority_debt_arrears"], "to": "StepChange", "url": "https://www.stepchange.org", "why": "Free debt advice" },
+    { "when": ["benefit_decision_dispute", "pip_appeal", "sanction"], "to": "Citizens Advice", "url": "https://www.citizensadvice.org.uk", "why": "Free help challenging benefit decisions" },
+    { "when": ["immigration_status_question", "nrpf"], "to": "Citizens Advice or an OISC-registered adviser", "url": "https://www.citizensadvice.org.uk", "why": "Immigration advice must be regulated" },
+    { "when": ["divorce", "child_maintenance_dispute", "eviction"], "to": "Citizens Advice, Shelter (housing), or a solicitor", "url": "https://england.shelter.org.uk", "why": "Legal issue" },
+    { "when": ["crisis_today", "no_food"], "to": "Council Crisis and Resilience Fund + local food bank", "url": "https://www.trusselltrust.org", "why": "Immediate help" }
+  ]
+}
