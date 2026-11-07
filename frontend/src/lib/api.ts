@@ -73,6 +73,9 @@ interface BNotification {
   source_url?: string | null;
   merchant?: string | null;
   suggested_action?: string | null;
+  /** Shortfall alerts: when the bill is due and how much is missing. */
+  due_date?: string | null;
+  shortfall?: number | null;
 }
 interface BAction {
   id: string;
@@ -85,6 +88,8 @@ interface BAction {
   monthly_value?: number | null;
   draft?: { to: string; subject: string; body: string } | null;
   form?: { name: string; fields: Record<string, string> } | null;
+  /** Extra parameters, e.g. a reminder date or a top-up limit. */
+  details?: Record<string, unknown> | null;
 }
 interface BReport {
   id: string;
@@ -116,13 +121,20 @@ export interface UpcomingStop {
   date: string;
   label: string;
   amount: number;
-  /** risk: Fola thinks you may not want this; chance: Fola can add money here. */
+  /** risk: may not want it, or money may run short; chance: Fola can add money here. */
   tone?: "risk" | "chance" | undefined;
   note?: string | undefined;
   notification_id?: string | undefined;
+  /** Projected current-account balance just after this stop. */
+  balance_after?: number | undefined;
+  /** How much short the account may be when this bill goes out. */
+  shortfall?: number | undefined;
+  /** Weekly items (like cash) count towards the balance but are not shown as stops. */
+  hidden?: boolean | undefined;
 }
 
 const DAY = 86400000;
+const HORIZON_DAYS = 35;
 const stopLabel = (m: string) =>
   m
     .replace(/^DWP /, "")
@@ -131,57 +143,112 @@ const stopLabel = (m: string) =>
     .replace(/^One Manchester$/, "Rent")
     .replace(/^Manchester City Council$/, "Council tax");
 
-/** Predict the next date of every payment that repeats monthly or every 4 weeks. */
+/**
+ * Predict upcoming payments that repeat (weekly, every 4 weeks, monthly) and walk the
+ * current-account balance forward, including average everyday spending, so a bill that
+ * may bounce is flagged before it happens.
+ */
 export function predictStops(
   txns: BTxn[],
   notes: BNotification[],
+  currentBalance?: number,
   today = new Date(),
 ): UpcomingStop[] {
   const by = new Map<string, BTxn[]>();
   for (const t of txns) by.set(t.merchant, [...(by.get(t.merchant) ?? []), t]);
+  const startOfToday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const horizon = startOfToday + HORIZON_DAYS * DAY;
   const stops: UpcomingStop[] = [];
+  const recurring = new Set<string>();
+
   for (const [merchant, list] of by) {
     if (list.length < 2) continue;
     const sorted = [...list].sort((a, b) => a.date.localeCompare(b.date));
-    const amounts = new Set(sorted.map((t) => Math.round(t.amount)));
-    if (amounts.size > 1) continue;
+    if (new Set(sorted.map((t) => Math.round(t.amount))).size > 1) continue;
     const gaps = sorted
       .slice(1)
-      .map((t, i) => (Date.parse(t.date) - Date.parse(sorted[i]!.date)) / DAY);
-    const gap = gaps.sort((a, b) => a - b)[Math.floor(gaps.length / 2)]!;
-    const last = sorted[sorted.length - 1]!;
-    let next: Date;
-    const step = (d: Date) => {
-      if (gap >= 27 && gap <= 29) return new Date(d.getTime() + 28 * DAY);
-      if (gap >= 29 && gap <= 32)
+      .map((t, i) => (Date.parse(t.date) - Date.parse(sorted[i]!.date)) / DAY)
+      .sort((a, b) => a - b);
+    const gap = gaps[Math.floor(gaps.length / 2)]!;
+    const weekly = gap >= 6 && gap <= 8;
+    const step = (d: Date): Date | null => {
+      if (weekly) return new Date(d.getTime() + 7 * DAY);
+      if (gap >= 27 && gap <= 28.5) return new Date(d.getTime() + 28 * DAY);
+      if (gap > 28.5 && gap <= 32)
         return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()));
       return null;
     };
-    let cur: Date | null = new Date(`${last.date}T00:00:00Z`);
-    do {
-      cur = cur ? step(cur) : null;
-    } while (cur && cur.getTime() < today.getTime() - DAY);
-    if (!cur) continue;
-    next = cur;
-    const risk = notes.find((n) => n.type === "financial" && n.merchant && n.merchant === merchant);
+    if (!step(new Date())) continue;
+    recurring.add(merchant);
+    const last = sorted[sorted.length - 1]!;
+    const risk = notes.find((n) => n.type === "financial" && n.merchant === merchant);
     const chance = /universal credit/i.test(merchant)
       ? notes.find((n) => n.type === "demographic" && /universal credit/i.test(n.title))
       : undefined;
-    stops.push({
-      id: `${merchant}-${next.toISOString().slice(0, 10)}`,
-      date: next.toISOString().slice(0, 10),
-      label: stopLabel(merchant),
-      amount: last.amount,
-      tone: risk ? "risk" : chance ? "chance" : undefined,
-      note: risk
-        ? "You may not want this"
-        : chance?.monthly_value
-          ? `+${gbp(chance.monthly_value)} a month with Fola`
-          : undefined,
-      notification_id: (risk ?? chance)?.id,
-    });
+    let cur: Date | null = new Date(`${last.date}T00:00:00Z`);
+    for (;;) {
+      cur = cur ? step(cur) : null;
+      if (!cur || cur.getTime() > horizon) break;
+      if (cur.getTime() < startOfToday) continue;
+      const date = cur.toISOString().slice(0, 10);
+      stops.push({
+        id: `${merchant}-${date}`,
+        date,
+        label: stopLabel(merchant),
+        amount: last.amount,
+        hidden: weekly,
+        tone: risk ? "risk" : chance ? "chance" : undefined,
+        note: risk
+          ? "You may not want this"
+          : chance?.monthly_value
+            ? `+${gbp(chance.monthly_value)} a month with Fola`
+            : undefined,
+        notification_id: (risk ?? chance)?.id,
+      });
+    }
   }
-  return stops.sort((a, b) => a.date.localeCompare(b.date));
+  stops.sort((a, b) => a.date.localeCompare(b.date) || b.amount - a.amount);
+
+  // Walk the balance forward with average everyday (non-repeating) spending.
+  if (currentBalance != null && stops.length) {
+    const lastDate = txns.reduce((m, t) => (t.date > m ? t.date : m), "");
+    const since = Date.parse(lastDate) - 60 * DAY;
+    const everyday =
+      -txns
+        .filter((t) => !recurring.has(t.merchant) && t.amount < 0 && Date.parse(t.date) > since)
+        .reduce((a, t) => a + t.amount, 0) / 60;
+    let bal = currentBalance;
+    let at = startOfToday;
+    let flagged = false;
+    for (const s of stops) {
+      const t = Date.parse(`${s.date}T00:00:00Z`);
+      bal -= everyday * Math.max(0, (t - at) / DAY);
+      at = t;
+      bal += s.amount;
+      s.balance_after = Math.round(bal * 100) / 100;
+      if (!flagged && !s.hidden && s.amount < 0 && bal < 0) {
+        flagged = true;
+        s.shortfall = Math.ceil(-bal);
+        s.tone = "risk";
+        s.note = `May be £${Math.ceil(-bal)} short`;
+      }
+    }
+  }
+
+  // A backend shortfall alert (e.g. rent) wins over the local estimate for that bill.
+  for (const n of notes) {
+    if (n.type !== "financial" || !n.due_date || !n.shortfall) continue;
+    const s = stops.find(
+      (x) => x.date === n.due_date && (!n.merchant || x.label === stopLabel(n.merchant)),
+    );
+    if (s) {
+      s.tone = "risk";
+      s.shortfall = n.shortfall;
+      s.note = `May be £${Math.ceil(n.shortfall)} short`;
+      s.notification_id = n.id;
+    }
+  }
+  return stops;
 }
 
 /* ------------------------------- adapters -------------------------------- */
@@ -396,7 +463,7 @@ function toUiAction(a: BAction): FolaAction {
     ? { to: a.draft.to, subject: a.draft.subject, body: a.draft.body }
     : {
         form_name: a.form?.name ?? a.title,
-        fields: Object.entries(a.form?.fields ?? {}).map(([label, value]) => ({
+        fields: Object.entries(a.form?.fields ?? a.details ?? {}).map(([label, value]) => ({
           label,
           value: String(value),
         })),
@@ -546,6 +613,8 @@ const ACTION_TYPES: FolaAction["type"][] = [
   "block_merchant",
   "cancel_subscription",
   "submit_claim",
+  "set_reminder",
+  "top_up_transfer",
 ];
 
 async function liveApprove(id: string): Promise<ApproveResponse> {
@@ -569,11 +638,13 @@ export const api = {
   isMock: useMock,
   getUpcoming: async (): Promise<UpcomingStop[]> => {
     if (useMock) return [];
-    const [txns, notes] = await Promise.all([
+    const [txns, notes, profile] = await Promise.all([
       http<BTxn[]>("/api/transactions").catch(() => [] as BTxn[]),
       http<BNotification[]>("/api/notifications").catch(() => [] as BNotification[]),
+      http<BProfile>("/api/profile").catch(() => null),
     ]);
-    return predictStops(txns, notes);
+    const savings = (profile?.savings ?? []).reduce((a, x) => a + x.balance, 0);
+    return predictStops(txns, notes, profile ? profile.net_worth - savings : undefined);
   },
   getProfile: () =>
     useMock ? viaMock(mock.profile) : http<BProfile>("/api/profile").then(toUiProfile),

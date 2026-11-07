@@ -3,7 +3,10 @@ import type { Report } from "./types";
 
 export function reportSummary(reports: Report[]) {
   const counted = reports.filter((r) => r.status === "resolved" || r.status === "in_progress");
-  const perYear = counted.reduce((s, r) => s + (r.money ? yearly(r.money.amount, r.money.period) : 0), 0);
+  const perYear = counted.reduce(
+    (s, r) => s + (r.money ? yearly(r.money.amount, r.money.period) : 0),
+    0,
+  );
   return {
     perYear: Math.round(perYear * 100) / 100,
     done: reports.filter((r) => r.status === "resolved").length,

@@ -8,6 +8,7 @@ import {
   RouteNext,
   headlineStop,
   monthName,
+  shortfallPrompt,
   stopDay,
 } from "@/components/fola/RouteAhead";
 import { SpottedList } from "@/components/fola/SpottedList";
@@ -112,7 +113,15 @@ function Home() {
                 >
                   <dt className="text-sm font-bold text-signal">Fola says</dt>
                   <dd className="font-bold leading-snug">
-                    {stop.notification_id ? (
+                    {stop.shortfall ? (
+                      <Link
+                        to="/chat"
+                        search={{ text: shortfallPrompt(stop) }}
+                        className="underline decoration-destructive decoration-2 underline-offset-4"
+                      >
+                        {stop.note}. Sort it
+                      </Link>
+                    ) : stop.notification_id ? (
                       <Link
                         to="/chat"
                         search={{ notification_id: stop.notification_id }}

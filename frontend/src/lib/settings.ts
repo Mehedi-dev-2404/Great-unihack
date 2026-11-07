@@ -9,7 +9,12 @@ export interface Settings {
 }
 
 const KEY = "fola-settings";
-const DEFAULTS: Settings = { textSize: "normal", language: "en", speakReplies: false, optInOpportunities: false };
+const DEFAULTS: Settings = {
+  textSize: "normal",
+  language: "en",
+  speakReplies: false,
+  optInOpportunities: false,
+};
 
 let current: Settings = DEFAULTS;
 const listeners = new Set<() => void>();
@@ -59,7 +64,14 @@ export function useSettings(): Settings {
   );
 }
 
-const LANG_VOICE: Record<string, string> = { en: "en-GB", so: "so-SO", pl: "pl-PL", ur: "ur-PK", ar: "ar-SA", cy: "cy-GB" };
+const LANG_VOICE: Record<string, string> = {
+  en: "en-GB",
+  so: "so-SO",
+  pl: "pl-PL",
+  ur: "ur-PK",
+  ar: "ar-SA",
+  cy: "cy-GB",
+};
 
 export function speak(text: string, lang = current.language) {
   try {
@@ -75,5 +87,7 @@ export function speak(text: string, lang = current.language) {
 }
 
 export function shouldAutoRead(accessibility: string[] | undefined): boolean {
-  return current.speakReplies || !!accessibility?.some((a) => a === "read_aloud" || a === "low_vision");
+  return (
+    current.speakReplies || !!accessibility?.some((a) => a === "read_aloud" || a === "low_vision")
+  );
 }

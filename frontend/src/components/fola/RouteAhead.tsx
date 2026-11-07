@@ -21,9 +21,19 @@ export const stopDay = (iso: string) =>
     timeZone: "UTC",
   });
 
+/** What to ask Fola when a bill may bounce. */
+export const shortfallPrompt = (s: UpcomingStop) =>
+  `My ${s.label.toLowerCase()} on ${stopDay(s.date)} may be ${money(s.shortfall ?? 0, true)} short. Help me sort it before it bounces.`;
+
 /** Pick the stop the blind announces: the next one Fola has something to say about, else the next one. */
 export function headlineStop(stops: UpcomingStop[]): UpcomingStop | undefined {
-  return stops.find((s) => s.tone === "chance") ?? stops.find((s) => s.tone === "risk") ?? stops[0];
+  const visible = stops.filter((s) => !s.hidden);
+  return (
+    visible.find((s) => s.shortfall) ??
+    visible.find((s) => s.tone === "chance") ??
+    visible.find((s) => s.tone === "risk") ??
+    visible[0]
+  );
 }
 
 /** The next few dated stops, predicted from payments that repeat. Sits in the first viewport. */
@@ -37,7 +47,10 @@ export function RouteNext() {
       <section className="card-fola h-72 animate-pulse" aria-label="Loading the route ahead" />
     );
   if (stops.length === 0) return null;
-  const shown = stops.slice(0, 5);
+  const visible = stops.filter((s) => !s.hidden);
+  const short = visible.find((s) => s.shortfall);
+  const shown = visible.slice(0, 5);
+  if (short && !shown.includes(short)) shown.push(short);
 
   return (
     <section className="card-fola overflow-hidden" aria-labelledby="next-h">
@@ -71,6 +84,14 @@ export function RouteNext() {
                       "mt-0.5 inline-block text-sm font-bold underline",
                       s.tone === "risk" ? "text-destructive" : "text-success",
                     )}
+                  >
+                    {s.note}
+                  </Link>
+                ) : s.shortfall ? (
+                  <Link
+                    to="/chat"
+                    search={{ text: shortfallPrompt(s) }}
+                    className="mt-0.5 inline-block text-sm font-bold text-destructive underline"
                   >
                     {s.note}
                   </Link>

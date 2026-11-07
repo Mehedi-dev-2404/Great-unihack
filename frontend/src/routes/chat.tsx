@@ -13,6 +13,8 @@ import {
   Scissors,
   Send,
   X,
+  ArrowLeftRight,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -68,6 +70,8 @@ const ICON: Record<FolaAction["type"], LucideIcon> = {
   block_merchant: Ban,
   cancel_subscription: Scissors,
   submit_claim: Landmark,
+  set_reminder: Bell,
+  top_up_transfer: ArrowLeftRight,
 };
 const STARTERS = ["Check my subscriptions", "Am I missing any help?", "Will I be OK this month?"];
 const SS_KEY = "fola-conversation-id";

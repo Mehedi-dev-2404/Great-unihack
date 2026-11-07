@@ -84,7 +84,14 @@ export function isEmailPreview(p: ActionPreview): p is EmailPreview {
 
 export interface FolaAction {
   id: string;
-  type: "send_email" | "fill_form" | "block_merchant" | "cancel_subscription" | "submit_claim";
+  type:
+    | "send_email"
+    | "fill_form"
+    | "block_merchant"
+    | "cancel_subscription"
+    | "submit_claim"
+    | "set_reminder"
+    | "top_up_transfer";
   title: string;
   /** Plain-English one-liner of what will happen. */
   summary?: string | undefined;
