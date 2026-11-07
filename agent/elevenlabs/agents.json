@@ -1,7 +1,10 @@
 {
     "agents": [
         {
-            "config": "agent_configs/fola.json"
+            "config": "agent_configs/fola.json",
+            "id": "agent_8801m6v89p3qe7c81q1f1zymx125",
+            "branch_id": "agtbrch_8601m6v89qa9et4a2b1wbzhzxv4c",
+            "version_id": "agtvrsn_8001m6v8jckxfenrpn1956wns81p"
         }
     ]
 }

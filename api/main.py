@@ -115,7 +115,33 @@ def _find_notification(st: dict, nid: Optional[str], action_type: Optional[str] 
     return None
 
 
+FACT_ALIASES = {
+    "children_living_with_user": "children_live_with_user",
+    "all_children_live_with_user": "children_live_with_user",
+    "all_children_under_18": "children_all_under_18",
+}
+
+
+def _canonical_facts(updates: dict) -> dict:
+    """Map fact names from the voice agent/brain onto the names rules.json uses."""
+    out = {FACT_ALIASES.get(k, k): v for k, v in (updates or {}).items()}
+    if isinstance(out.get("children_live_with_user"), int) and not isinstance(out["children_live_with_user"], bool):
+        out["children_live_with_user"] = out["children_live_with_user"] > 0
+    ages = out.get("children_ages")
+    if isinstance(ages, str):
+        nums = [int(n) for n in re.findall(r"\d+", ages)]
+        if nums:
+            out["children_ages"] = nums
+    try:
+        from agent.brain import normalise_facts
+        out = normalise_facts(out)
+    except Exception:
+        pass
+    return out
+
+
 def _merge_facts(updates: dict) -> dict:
+    updates = _canonical_facts(updates)
     with store.LOCK:
         profile = store.load("profile") or {}
         facts = profile.get("facts") or {}

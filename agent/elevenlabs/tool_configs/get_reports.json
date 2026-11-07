@@ -3,7 +3,7 @@
     "name": "get_reports",
     "description": "Get the dated reports of actions already taken for this user, newest first. Use it when the user asks what has been done, wants proof for the council, a landlord or a lawyer, or before proposing something that may already have been done.",
     "api_schema": {
-        "url": "https://API_BASE_URL/api/reports",
+        "url": "https://fola-api-production.up.railway.app/api/reports",
         "method": "GET",
         "request_headers": {
             "Content-Type": "application/json"

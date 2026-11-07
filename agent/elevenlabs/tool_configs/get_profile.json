@@ -3,7 +3,7 @@
     "name": "get_profile",
     "description": "Get the user's saved profile: name, household (children and their ages), benefits they already receive, income, accounts and net worth. Call this once at the very start of every conversation, before you say anything about their situation. Never ask the user for a fact that is already in this profile.",
     "api_schema": {
-        "url": "https://API_BASE_URL/api/profile",
+        "url": "https://fola-api-production.up.railway.app/api/profile",
         "method": "GET",
         "request_headers": {
             "Content-Type": "application/json"

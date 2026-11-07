@@ -3,7 +3,7 @@
     "name": "approve_action",
     "description": "Carry out a drafted action (send the email or message, cancel or block the subscription) and save a dated report. Only call this after you have read the draft summary aloud and the user has clearly said yes in this turn. Never call it on silence, a maybe, or a question.",
     "api_schema": {
-        "url": "https://API_BASE_URL/api/actions/{action_id}/approve",
+        "url": "https://fola-api-production.up.railway.app/api/actions/{action_id}/approve",
         "method": "POST",
         "request_headers": {
             "Content-Type": "application/json"
@@ -12,6 +12,19 @@
             "action_id": {
                 "type": "string",
                 "description": "The id of the pending action, exactly as returned by propose_action (the 'id' field)."
+            }
+        },
+        "request_body_schema": {
+            "type": "object",
+            "description": "Confirmation that the user approved this action.",
+            "required": [
+                "confirmed"
+            ],
+            "properties": {
+                "confirmed": {
+                    "type": "boolean",
+                    "description": "Must be true. Only call this tool after the user has clearly said yes to the summary you read aloud."
+                }
             }
         }
     },

@@ -3,7 +3,7 @@
     "name": "decline_action",
     "description": "Cancel a drafted action the user does not want. Call this when the user says no, not now, or wants to change something (then propose a new action with the changes).",
     "api_schema": {
-        "url": "https://API_BASE_URL/api/actions/{action_id}/decline",
+        "url": "https://fola-api-production.up.railway.app/api/actions/{action_id}/decline",
         "method": "POST",
         "request_headers": {
             "Content-Type": "application/json"
@@ -12,6 +12,16 @@
             "action_id": {
                 "type": "string",
                 "description": "The id of the pending action, exactly as returned by propose_action (the 'id' field)."
+            }
+        },
+        "request_body_schema": {
+            "type": "object",
+            "description": "Why the user declined.",
+            "properties": {
+                "reason": {
+                    "type": "string",
+                    "description": "Short plain-English reason the user gave, if any."
+                }
             }
         }
     },

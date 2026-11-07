@@ -38,6 +38,22 @@ All benefit and council rules are **real, current UK rules** with a gov.uk sourc
 
 ElevenLabs (voice agent), Claude API (reasoning + tools), Lovable Pro (frontend), Python FastAPI backend.
 
+## Live
+
+- **API base URL:** https://fola-api-production.up.railway.app (Railway project `fola`, service `fola-api`). Frontend: set `VITE_API_URL` to this.
+- Health: https://fola-api-production.up.railway.app/health
+- **ElevenLabs voice agent ID:** `agent_8801m6v89p3qe7c81q1f1zymx125` (Fola · voice Alice, British · LLM claude-sonnet-5-5 · 8 webhook tools on the API above). Config as code in `agent/elevenlabs/`; redeploy with `agent/elevenlabs/push.sh <API URL>`.
+- **Widget embed** (put it behind the big round button; `user_name` fills the first message):
+
+  ```html
+  <elevenlabs-convai agent-id="agent_8801m6v89p3qe7c81q1f1zymx125" dynamic-variables='{"user_name":"Amara"}'></elevenlabs-convai>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  ```
+
+  For a custom button instead of the stock widget, use `@elevenlabs/react` (`useConversation().startSession({ agentId: "agent_8801m6v89p3qe7c81q1f1zymx125", dynamicVariables: { user_name: "Amara" } })`).
+- Demo reset: `POST /api/reset` (clears actions, reports and learned facts). Railway's disk is ephemeral, so a redeploy also resets.
+- **Execution is simulated:** approving an action writes a dated report (`simulated: true`) but sends no real email. The tool URLs in `agent/elevenlabs/tool_configs/` now hold the Railway URL; to point at a different backend, replace that URL in those files and rerun `elevenlabs tools push && elevenlabs agents push`.
+
 ## API contract (frontend and backend both stick to this)
 
 ```

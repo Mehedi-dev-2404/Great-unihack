@@ -57,7 +57,7 @@ To switch voices, change `conversation_config.tts.voice_id` in `agent_configs/fo
 ## Models
 
 - LLM: `claude-sonnet-5-5`, temperature 0.3. It is in the config's allowed LLM list, and it handles careful tool use (it never approves without a yes) and calm plain English well. For lower latency, use `claude-haiku-4-5`.
-- TTS: `eleven_flash_v2_5`, the low-latency conversational model, with `optimize_streaming_latency: 3` and speed 0.95, slightly slower for clarity.
+- TTS: `eleven_flash_v2`, the low-latency conversational model, with `optimize_streaming_latency: 3` and speed 0.95, slightly slower for clarity.
 - ASR: `scribe_realtime`, with keywords (Universal Credit, DWP, YouTube Music, and others).
 - Language: `en`.
 

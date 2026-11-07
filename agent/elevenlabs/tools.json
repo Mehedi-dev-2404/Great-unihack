@@ -2,35 +2,43 @@
     "tools": [
         {
             "type": "webhook",
-            "config": "tool_configs/get_profile.json"
+            "config": "tool_configs/get_profile.json",
+            "id": "tool_6201m6v88whze9mv3f8n7b42p3s5"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/get_notifications.json"
+            "config": "tool_configs/get_notifications.json",
+            "id": "tool_0201m6v88wv6ee1v2aqm1e0wxgx5"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/save_facts.json"
+            "config": "tool_configs/save_facts.json",
+            "id": "tool_0001m6v88x1xf9ktxxmbvppmwwvx"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/propose_action.json"
+            "config": "tool_configs/propose_action.json",
+            "id": "tool_4601m6v88xasf1xra9gsq4r928vn"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/approve_action.json"
+            "config": "tool_configs/approve_action.json",
+            "id": "tool_5001m6v899bwfh3bgtpjc39fv5jz"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/decline_action.json"
+            "config": "tool_configs/decline_action.json",
+            "id": "tool_9401m6v899ndf129j85e8m6tb0r0"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/get_reports.json"
+            "config": "tool_configs/get_reports.json",
+            "id": "tool_7201m6v88xxje93vp6hj9f941m74"
         },
         {
             "type": "webhook",
-            "config": "tool_configs/get_forecast.json"
+            "config": "tool_configs/get_forecast.json",
+            "id": "tool_8501m6v88y45ec69vfzt70px2176"
         }
     ]
 }

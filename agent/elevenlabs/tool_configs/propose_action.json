@@ -3,7 +3,7 @@
     "name": "propose_action",
     "description": "Draft an action for the user to approve. Nothing is sent or changed yet. Use it once you have every fact the action needs. The response includes an action id and a plain summary of exactly what will be sent and to whom: read that summary aloud and ask the user for a clear yes before calling approve_action.",
     "api_schema": {
-        "url": "https://API_BASE_URL/api/actions",
+        "url": "https://fola-api-production.up.railway.app/api/actions",
         "method": "POST",
         "request_headers": {
             "Content-Type": "application/json"

@@ -3,7 +3,7 @@
     "name": "save_facts",
     "description": "Save new facts the user has just told you, so they are never asked again. Call this as soon as the user confirms something new about themselves (for example a child's age, who lives with them, whether a child is in full-time education, a change in work or rent). Do not save guesses, only what the user actually said.",
     "api_schema": {
-        "url": "https://API_BASE_URL/api/profile/facts",
+        "url": "https://fola-api-production.up.railway.app/api/profile/facts",
         "method": "POST",
         "request_headers": {
             "Content-Type": "application/json"
@@ -20,17 +20,17 @@
                     "description": "The new facts. Fill only the fields the user just told you; leave the rest out.",
                     "required": [],
                     "properties": {
-                        "children_living_with_user": {
-                            "type": "integer",
-                            "description": "How many children live with the user most of the time."
+                        "children_live_with_user": {
+                            "type": "boolean",
+                            "description": "True if the user confirmed all their children live with them most of the time."
                         },
-                        "all_children_under_18": {
+                        "children_all_under_18": {
                             "type": "boolean",
                             "description": "True if the user confirmed every child is under 18."
                         },
                         "children_ages": {
                             "type": "string",
-                            "description": "Ages of the children, comma separated, e.g. '15, 9, 4'."
+                            "description": "Ages of the children, comma separated, e.g. '3, 9, 14'."
                         },
                         "eldest_in_approved_education": {
                             "type": "boolean",
