@@ -146,10 +146,11 @@ def execute(action: dict) -> dict:
         "notification_id": action.get("notification_id"),
         "rule_id": action.get("rule_id"),
         "simulated": True,
+        "delivery": "prepared_and_logged",
+        "note_for_agent": "Demo mode: the message is prepared and logged with today's date, but nothing was actually sent. Do not say it was sent or delivered.",
     }
     if action.get("type") == "cancel_subscription":
         details["merchant"] = action.get("merchant")
-        details["email_sent"] = bool(action.get("draft"))
         details["monthly_saving"] = action.get("monthly_value")
     elif action.get("monthly_value"):
         details["estimated_monthly_value"] = action.get("monthly_value")
