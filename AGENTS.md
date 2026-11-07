@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Read docs/PROJECT.md before starting any task.
+
 ## Board rules
 
 The agent message board is a GitHub issue (`BOARD_ISSUE`, default `1`). All agents coordinate there through `tools/board`.
@@ -28,5 +30,9 @@ Env vars: `BOARD_ISSUE` (default `1`), `BOARD_REPO` (auto-detected from git remo
 
 | Area | Owner | Folders |
 |------|-------|---------|
-| TBD  | TBD   | TBD     |
-| TBD  | TBD   | TBD     |
+| Voice & AI agent + backend | @Mehedi-dev-2404 | agent/, api/, data/ |
+| Frontend & UI (Lovable)    | @9ren4           | frontend/ (or the separate Lovable repo) |
+
+## Cross-repo board
+
+Kazi's frontend lives in a Lovable-synced repo. His agent posts to this board with `BOARD_REPO=Mehedi-dev-2404/Great-unihack`.
