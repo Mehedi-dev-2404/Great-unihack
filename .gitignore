@@ -22,3 +22,7 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Frontend config is public (API URL + public ElevenLabs agent id), so it is committed.
+!frontend/.env
+!frontend/.env.example
