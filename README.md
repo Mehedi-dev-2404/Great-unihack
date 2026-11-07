@@ -4,6 +4,8 @@ A voice-first AI money coach for people the banks and benefits system often miss
 
 Built by team Cache Money at Great UNI Hack 2026 (Manchester) for the NatWest "AI-Powered Financial Inclusion & Resilience" and ElevenLabs challenges.
 
+**Try it in 2 minutes:** `cd frontend && npm i && npm run dev` → open http://localhost:5173 in Chrome on a phone-sized window, tap the yellow button and talk. It already points at the live API and voice agent.
+
 **Live API:** https://fola-api-production.up.railway.app ([health](https://fola-api-production.up.railway.app/health))
 **Voice agent:** ElevenLabs agent `agent_8801m6v89p3qe7c81q1f1zymx125` (voice "Alice", British; LLM Claude Sonnet 5.5)
 
@@ -25,6 +27,45 @@ Built by team Cache Money at Great UNI Hack 2026 (Manchester) for the NatWest "A
 - **C. Rent shortfall:** Fola opens with "your rent is due on Thursday the 12th and you may be about £80 short" → offers a reminder, then moving up to £90 from her credit union savings only if needed → yes → set up and logged. If there's nothing to move, it suggests talking to the landlord early, asking UC to pay the landlord directly (Alternative Payment Arrangement) and council crisis support.
 
 Before a demo, reset the live state: `curl -X POST https://fola-api-production.up.railway.app/api/reset`
+
+## How it meets the judging criteria
+
+| Criterion | Where to look |
+|-----------|---------------|
+| **NatWest · Customer focus** | Phone-first, one big talk button, plain English, text size setting, read-aloud on everything, Atkinson Hyperlegible type (designed for low vision), WCAG 2.2 AA contrast and focus. |
+| **NatWest · Innovation** | An agent, not a chatbot: it drafts, asks permission, records. Guesses from bank data first and asks only the question that unlocks money, after it has already helped. |
+| **NatWest · Social impact and ethics** | Real gov.uk rules only, with sources shown; every alert shows its evidence ("Why?"); nothing happens without a yes; "Prepared and logged", never pretends to send; ethnicity and other sensitive data never affect a benefit decision; refers out to Citizens Advice, StepChange, Shelter, Samaritans. |
+| **NatWest · AI and data ("financial time travel")** | Home shows the *next stop* (the next bill that may bounce), a dated *Route ahead* from repeating payments, and a 12-month forecast as two routes: no change vs with Fola. |
+| **NatWest · Feasibility** | Works on open-banking-shaped transactions; every action is a template a bank could execute; demo resets in one call. |
+| **ElevenLabs · Voice is core** | The whole product works by voice; the screen confirms and records. Approval cards appear on screen while you talk. |
+| **ElevenLabs · Natural voices** | British voice "Alice", short turns, captions that fade in one sentence at a time, paced to speech; says goodbye and hangs up when you say "no, that's all". |
+| **ElevenLabs · Accessibility** | Usable without reading: low literacy, low vision, busy parents with one hand free. |
+
+## The app (frontend/)
+
+Five screens, in a "bus route" visual world: route-blind black headers, bus yellow for the one thing to press, stops on a yellow line.
+
+| Screen | What's on it |
+|--------|--------------|
+| **Home** | *Next stop* blind (the next bill, with "may be £X short" when it would bounce), the big yellow talk button with live captions, *Route ahead* (next dated payments, risky ones ringed red), *Fola spotted* (alerts with one "Sort it" button and a "Why?" showing the payments or gov.uk rule), and the 12-month two-route forecast. |
+| **Chat** | Typed version of the same agent. Approval cards ("Fola needs your yes") with Yes / No. |
+| **Journey log** | Every approved action as a dated stop: "Prepared and logged · 7 Nov, 15:16". Printable for the council or an adviser. |
+| **Profile** | "What Fola knows about you": facts from the bank and facts you told Fola, in plain questions, each fixable. Settings: language, read-aloud, text size, opt-in opportunities. Download or delete your data. |
+
+Hidden demo control: **long-press the "Fola" logo for 1.5 s** to reset the live demo (calls `POST /api/reset`).
+
+How it fits together:
+- `frontend/src/lib/api.ts` adapts the backend's shapes to the screens, and predicts upcoming stops and shortfalls from `/api/transactions`.
+- `frontend/src/hooks/useFolaVoice.ts` runs the ElevenLabs session (`@elevenlabs/react`, WebRTC) and paces captions per [docs/voice-captions.md](docs/voice-captions.md).
+- `frontend/.env` holds only public values (API URL, public agent id), so a fresh clone runs live. With `VITE_API_URL` empty it runs on built-in mock data.
+- Design system: [frontend/DESIGN.md](frontend/DESIGN.md). Product brief: [frontend/PRODUCT.md](frontend/PRODUCT.md).
+
+The frontend started in Lovable (`9ren4/pixel-perfect-replica`); `frontend/` here is the copy we now work from.
+
+## Research and test data
+
+- `data/benefit_rules.json`: 18 UK rules researched from gov.uk for 2026-27 (Universal Credit with its child and childcare amounts, Child Benefit, Pension Credit, PIP, Carer's Allowance, council tax discounts, Warm Home Discount, free school meals, Healthy Start, Tax-Free Childcare, Help to Save, NHS health costs, broadband social tariffs, Crisis and Resilience Fund, opt-in opportunities), each with conditions, amounts, how to claim, a plain-English "why you don't qualify" and a source link. The live engine uses 4 of them so far (`data/rules.json`).
+- `data/mock/`: 10 test personas (single parent, pensioner, zero-hours worker, carer, care-leaver student, EU worker, couple over the savings limit, disabled man with a gambling pattern, £65k earner). Each has what the bank knows, what only the user knows, and the answers Fola *should* and *should not* find. Regenerate with `python3 data/mock/gen_mock.py .`
 
 ## What's real and what isn't
 
@@ -58,7 +99,7 @@ ElevenLabs agent ──webhook tools──▶ FastAPI backend (api/) ──▶ C
 | `agent/brain.py` | Claude reasoning: chat, drafting actions, eligibility checks, fact normalisation. |
 | `agent/elevenlabs/` | Voice agent config as code (prompt, voice, tools). Redeploy with `agent/elevenlabs/push.sh <API URL>`. |
 | `data/` | Demo profile, transactions and UK benefit rules. |
-| `frontend/` | Web app: notifications, big talk button, forecast, reports. |
+| `frontend/` | Web app (TanStack Start, React, Tailwind): Home, Chat, Journey log, Profile. See "The app" above. |
 
 ## Run it locally
 
@@ -72,12 +113,19 @@ uvicorn api.main:app --port 8000
 
 Without an Anthropic key the API still runs, using the rule-based fallback for chat and template drafts.
 
-Frontend:
+Frontend (Node 20+; `.npmrc` already sets `legacy-peer-deps`):
 
 ```bash
 cd frontend
 npm install
-VITE_API_URL=http://localhost:8000 npm run dev
+npm run dev                                        # uses the live API from frontend/.env
+VITE_API_URL=http://localhost:8000 npm run dev     # or point it at your local backend
 ```
 
-Tests: `python3 -m pytest agent/tests` (`test_live.py` calls Claude and needs an API key).
+Use Chrome on `localhost` (microphone access needs localhost or https).
+
+Tests: `python3 -m pytest agent/tests` (`test_live.py` calls Claude and needs an API key). Frontend: `cd frontend && npx tsc --noEmit && npx vitest run`.
+
+## Team
+
+Cache Money: Mehedi (voice agent, backend, AI) and Kazi (frontend, design, research), with Claude Code agents coordinating through the board in issue #1 ([AGENTS.md](AGENTS.md)).
