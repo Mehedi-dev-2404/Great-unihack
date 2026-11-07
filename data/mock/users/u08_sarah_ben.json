@@ -1,0 +1,123 @@
+{
+  "id": "u08",
+  "story": "Sarah (34) and Ben (36), Sheffield. Joint account. Ben was made redundant at the end of July; his redundancy pay pushed savings to £17,200. Since September they've been moving £800 a month out of savings to cover bills. Two gym memberships, and a surprise £119.99 McAfee renewal.",
+  "bank_knows": {
+    "first_name": "Sarah",
+    "last_name": "Hughes",
+    "dob": "1992-01-19",
+    "postcode": "S11 8AA",
+    "council": "Sheffield City Council",
+    "nation": "england",
+    "preferred_language": "en",
+    "accessibility": [],
+    "joint_with": {
+      "first_name": "Ben",
+      "last_name": "Hughes",
+      "dob": "1990-07-07"
+    },
+    "accounts": [
+      {
+        "id": "u08-a1",
+        "type": "current",
+        "name": "Current account",
+        "balance": 1806.15
+      },
+      {
+        "id": "u08-a2",
+        "type": "savings",
+        "name": "Easy saver",
+        "balance": 17200.0
+      }
+    ],
+    "liabilities": [
+      {
+        "type": "mortgage",
+        "name": "Mortgage",
+        "balance": 142000.0
+      }
+    ],
+    "net_worth_history": [
+      {
+        "date": "2026-05-07",
+        "assets": 18106.75,
+        "liabilities": 142000.0,
+        "net_worth": -123893.25
+      },
+      {
+        "date": "2026-06-07",
+        "assets": 18846.66,
+        "liabilities": 142000.0,
+        "net_worth": -123153.34
+      },
+      {
+        "date": "2026-07-07",
+        "assets": 19710.63,
+        "liabilities": 142000.0,
+        "net_worth": -122289.37
+      },
+      {
+        "date": "2026-08-07",
+        "assets": 19995.39,
+        "liabilities": 142000.0,
+        "net_worth": -122004.61
+      },
+      {
+        "date": "2026-09-07",
+        "assets": 19779.86,
+        "liabilities": 142000.0,
+        "net_worth": -122220.14
+      },
+      {
+        "date": "2026-10-07",
+        "assets": 19605.71,
+        "liabilities": 142000.0,
+        "net_worth": -122394.29
+      },
+      {
+        "date": "2026-11-07",
+        "assets": 19006.15,
+        "liabilities": 142000.0,
+        "net_worth": -122993.85
+      }
+    ]
+  },
+  "only_user_knows": {
+    "relationship_status": "married",
+    "has_partner_living_with": true,
+    "partner_dob": "1990-07-07",
+    "housing_tenure": "own_mortgage",
+    "employment_status": "employed",
+    "partner_employment_status": "unemployed",
+    "savings_total": 17200,
+    "children": [],
+    "health_condition_affects_work": false
+  },
+  "should_find": [
+    {
+      "kind": "forecast",
+      "detail": "savings fall ~£800/month -> drop below £16,000 around Dec 2026 -> re-check UC then",
+      "demo": "time_travel"
+    },
+    {
+      "kind": "anomaly",
+      "merchant": "MCAFEE",
+      "detail": "£119.99 auto-renewal, ask for refund within 14 days if not wanted"
+    },
+    {
+      "kind": "saving",
+      "merchant": "PUREGYM",
+      "detail": "two memberships; ask if both are used (don't assume)"
+    },
+    {
+      "kind": "benefit",
+      "detail": "Ben may get New Style JSA (not means-tested; based on NI record). NOT in rules file yet -> add rule"
+    }
+  ],
+  "should_not_find": [
+    {
+      "rule_id": "universal_credit",
+      "why": "savings £17,200 > £16,000. Say kindly, and say when that may change"
+    }
+  ],
+  "transactions_file": "transactions/u08_sarah_ben.csv"
+}

@@ -1,0 +1,148 @@
+{
+  "id": "u01",
+  "story": "Daniel, 38, Leeds. Separated dad of three on Universal Credit, part-time warehouse job. Signed up to a YouTube Music trial by accident in September and it's been charging him since. His UC never went up when the two-child limit ended in April 2026, and he still pays ParentPay for school meals.",
+  "bank_knows": {
+    "first_name": "Daniel",
+    "last_name": "Okafor",
+    "dob": "1987-03-14",
+    "postcode": "LS9 7AB",
+    "council": "Leeds City Council",
+    "nation": "england",
+    "preferred_language": "en",
+    "accessibility": [],
+    "accounts": [
+      {
+        "id": "u01-a1",
+        "type": "current",
+        "name": "Current account",
+        "balance": 976.48
+      }
+    ],
+    "liabilities": [
+      {
+        "type": "loan",
+        "name": "Budgeting Advance (DWP)",
+        "balance": 300.0
+      }
+    ],
+    "net_worth_history": [
+      {
+        "date": "2026-05-07",
+        "assets": 348.83,
+        "liabilities": 300.0,
+        "net_worth": 48.83
+      },
+      {
+        "date": "2026-06-07",
+        "assets": 570.95,
+        "liabilities": 300.0,
+        "net_worth": 270.95
+      },
+      {
+        "date": "2026-07-07",
+        "assets": 769.29,
+        "liabilities": 300.0,
+        "net_worth": 469.29
+      },
+      {
+        "date": "2026-08-07",
+        "assets": 995.17,
+        "liabilities": 300.0,
+        "net_worth": 695.17
+      },
+      {
+        "date": "2026-09-07",
+        "assets": 670.01,
+        "liabilities": 300.0,
+        "net_worth": 370.01
+      },
+      {
+        "date": "2026-10-07",
+        "assets": 1009.6,
+        "liabilities": 300.0,
+        "net_worth": 709.6
+      },
+      {
+        "date": "2026-11-07",
+        "assets": 976.48,
+        "liabilities": 300.0,
+        "net_worth": 676.48
+      }
+    ]
+  },
+  "only_user_knows": {
+    "children": [
+      {
+        "dob": "2012-05-02",
+        "lives_with_you": true
+      },
+      {
+        "dob": "2015-09-20",
+        "lives_with_you": true
+      },
+      {
+        "dob": "2019-01-11",
+        "lives_with_you": true
+      }
+    ],
+    "relationship_status": "separated",
+    "has_partner_living_with": false,
+    "housing_tenure": "social_rent",
+    "employment_status": "employed",
+    "savings_total": 0,
+    "health_condition_affects_work": false,
+    "name_on_electricity_bill": true,
+    "pays_council_tax": true,
+    "adults_in_home_not_disregarded": 0
+  },
+  "should_find": [
+    {
+      "kind": "anomaly",
+      "merchant": "YOUTUBE MUSIC",
+      "detail": "new recurring £10.99 since 2026-09-03, no music spend before",
+      "save_per_year": 131.88,
+      "demo": "A"
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "uc_child_element",
+      "detail": "3rd child (born 2019) should count since 6 Apr 2026; UC payment unchanged at £1,353.07",
+      "gain_per_month": 303.94,
+      "demo": "B"
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "free_school_meals",
+      "detail": "on UC since Sept 2026 rule; still paying PARENTPAY £46/month",
+      "save_per_year": 460
+    },
+    {
+      "kind": "saving",
+      "rule_id": "broadband_social_tariff",
+      "detail": "Virgin Media £38/mo vs Essential £12.50",
+      "save_per_year": 306
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "council_tax_single_person_discount",
+      "detail": "only adult (kids disregarded); paying full £118",
+      "save_per_year": 295
+    },
+    {
+      "kind": "benefit",
+      "rule_id": "warm_home_discount",
+      "detail": "on UC, should be automatic £150; remind if not seen by Feb 2027"
+    }
+  ],
+  "should_not_find": [
+    {
+      "rule_id": "pension_credit",
+      "why": "under State Pension age"
+    },
+    {
+      "rule_id": "tax_free_childcare",
+      "why": "can't combine with Universal Credit"
+    }
+  ],
+  "transactions_file": "transactions/u01_daniel.csv"
+}

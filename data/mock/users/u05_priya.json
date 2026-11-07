@@ -1,0 +1,101 @@
+{
+  "id": "u05",
+  "story": "Priya, 45, Leicester. Works 16 hours a week at Sainsbury's (£180/week) and spends about 40 hours a week caring for her mum, who gets Attendance Allowance. Married; husband pays the main bills from his own account. Doesn't think of herself as a 'carer'.",
+  "bank_knows": {
+    "first_name": "Priya",
+    "last_name": "Patel",
+    "dob": "1981-04-22",
+    "postcode": "LE4 6AA",
+    "council": "Leicester City Council",
+    "nation": "england",
+    "preferred_language": "en",
+    "accessibility": [],
+    "accounts": [
+      {
+        "id": "u05-a1",
+        "type": "current",
+        "name": "Current account",
+        "balance": 703.07
+      },
+      {
+        "id": "u05-a2",
+        "type": "savings",
+        "name": "Easy saver",
+        "balance": 1800.0
+      }
+    ],
+    "liabilities": [],
+    "net_worth_history": [
+      {
+        "date": "2026-05-07",
+        "assets": 2180.0,
+        "liabilities": 0,
+        "net_worth": 2180.0
+      },
+      {
+        "date": "2026-06-07",
+        "assets": 2141.75,
+        "liabilities": 0,
+        "net_worth": 2141.75
+      },
+      {
+        "date": "2026-07-07",
+        "assets": 2247.58,
+        "liabilities": 0,
+        "net_worth": 2247.58
+      },
+      {
+        "date": "2026-08-07",
+        "assets": 2339.92,
+        "liabilities": 0,
+        "net_worth": 2339.92
+      },
+      {
+        "date": "2026-09-07",
+        "assets": 2217.42,
+        "liabilities": 0,
+        "net_worth": 2217.42
+      },
+      {
+        "date": "2026-10-07",
+        "assets": 2121.78,
+        "liabilities": 0,
+        "net_worth": 2121.78
+      },
+      {
+        "date": "2026-11-07",
+        "assets": 2503.07,
+        "liabilities": 0,
+        "net_worth": 2503.07
+      }
+    ]
+  },
+  "only_user_knows": {
+    "relationship_status": "married",
+    "has_partner_living_with": true,
+    "housing_tenure": "own_mortgage",
+    "employment_status": "employed",
+    "weekly_earnings_after_deductions": 180,
+    "cares_hours_per_week": 40,
+    "cared_for_gets_qualifying_benefit": true,
+    "children": [],
+    "savings_total": 1800,
+    "health_condition_affects_work": false
+  },
+  "should_find": [
+    {
+      "kind": "benefit",
+      "rule_id": "carers_allowance",
+      "detail": "40h/week, mum gets Attendance Allowance, earns £180 < £204",
+      "gain_per_week": 86.45,
+      "must_warn": "Carer's Allowance can reduce mum's benefits (severe disability premium) -> say this first"
+    }
+  ],
+  "should_not_find": [
+    {
+      "rule_id": "pip",
+      "why": "no health condition of her own"
+    }
+  ],
+  "transactions_file": "transactions/u05_priya.csv"
+}
