@@ -1,0 +1,349 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Overpass", "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-signal: var(--signal);
+  --color-signal-foreground: var(--signal-foreground);
+  --color-blind: var(--blind);
+  --color-blind-foreground: var(--blind-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --shadow-soft: var(--shadow-soft-value);
+}
+
+/* Bus-route world: route-blind black shell, bus yellow as the one loud colour,
+   white working surfaces on a neutral ground, stop-red for risk, green for money gained. */
+:root {
+  --radius: 0.75rem;
+  /* #F2F2EF neutral ground */
+  --background: oklch(0.958 0.003 106);
+  /* #111111 ink */
+  --foreground: oklch(0.178 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.178 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.178 0 0);
+  /* Primary controls are ink-black pills */
+  --primary: oklch(0.178 0 0);
+  --primary-foreground: oklch(1 0 0);
+  /* #FFF3BF pale yellow for highlighted surfaces */
+  --primary-soft: oklch(0.962 0.068 96);
+  /* #FFCC00 bus yellow */
+  --signal: oklch(0.866 0.177 90);
+  --signal-foreground: oklch(0.178 0 0);
+  /* Route-blind black */
+  --blind: oklch(0.178 0 0);
+  --blind-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.93 0.003 106);
+  --secondary-foreground: oklch(0.178 0 0);
+  --muted: oklch(0.925 0.004 106);
+  /* #55554F secondary text, 7:1 on ground */
+  --muted-foreground: oklch(0.43 0.008 106);
+  --accent: oklch(0.962 0.068 96);
+  --accent-foreground: oklch(0.36 0.07 85);
+  /* #C8221A stop red */
+  --destructive: oklch(0.53 0.2 28);
+  --destructive-foreground: oklch(1 0 0);
+  /* #9A5200 amber, in progress */
+  --warning: oklch(0.52 0.13 60);
+  --warning-soft: oklch(0.955 0.045 80);
+  /* #1C7A3B money gained */
+  --success: oklch(0.51 0.13 150);
+  --success-soft: oklch(0.95 0.045 150);
+  --info: oklch(0.488 0.217 264);
+  --info-soft: oklch(0.94 0.03 264);
+  --border: oklch(0.885 0.005 106);
+  --input: oklch(0.8 0.006 106);
+  --ring: oklch(0.178 0 0);
+  --chart-1: oklch(0.178 0 0);
+  --chart-2: oklch(0.7 0.005 106);
+  --chart-3: oklch(0.53 0.2 28);
+  --chart-4: oklch(0.51 0.13 150);
+  --chart-5: oklch(0.866 0.177 90);
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --shadow-soft-value: 0 1px 2px oklch(0.2 0 0 / 6%), 0 6px 18px -10px oklch(0.2 0 0 / 22%);
+}
+
+.dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.96 0.003 106);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.96 0.003 106);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.96 0.003 106);
+  --primary: oklch(0.866 0.177 90);
+  --primary-foreground: oklch(0.178 0 0);
+  --primary-soft: oklch(0.3 0.06 90);
+  --signal: oklch(0.866 0.177 90);
+  --signal-foreground: oklch(0.178 0 0);
+  --blind: oklch(0.1 0 0);
+  --blind-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.26 0 0);
+  --secondary-foreground: oklch(0.96 0.003 106);
+  --muted: oklch(0.26 0 0);
+  --muted-foreground: oklch(0.78 0.005 106);
+  --accent: oklch(0.3 0.06 90);
+  --accent-foreground: oklch(0.9 0.12 92);
+  --destructive: oklch(0.7 0.17 28);
+  --destructive-foreground: oklch(0.15 0 0);
+  --warning: oklch(0.8 0.13 75);
+  --warning-soft: oklch(0.32 0.05 70);
+  --success: oklch(0.78 0.15 150);
+  --success-soft: oklch(0.3 0.05 150);
+  --info: oklch(0.75 0.12 260);
+  --info-soft: oklch(0.3 0.06 260);
+  --border: oklch(0.32 0 0);
+  --input: oklch(0.42 0 0);
+  --ring: oklch(0.866 0.177 90);
+  --chart-1: oklch(0.866 0.177 90);
+  --chart-2: oklch(0.55 0 0);
+  --shadow-soft-value: 0 8px 24px -12px oklch(0 0 0 / 60%);
+}
+
+/* Text size: base rem drives every Tailwind size. Normal = 18px body */
+html { font-size: 112.5%; }
+html.text-size-large { font-size: 125%; }
+html.text-size-xl { font-size: 143.75%; }
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  ::selection { background: var(--color-signal); color: var(--color-signal-foreground); }
+  :focus-visible {
+    outline: 3px solid var(--color-ring);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--color-signal);
+  }
+  a { text-underline-offset: 0.2em; }
+  input, textarea { caret-color: var(--color-foreground); }
+  ::placeholder { color: var(--color-muted-foreground); opacity: 1; }
+}
+
+/* Route blinds run edge to edge even when the app column is centred on a wide screen. */
+.bleed {
+  margin-inline: calc(-1 * max(1rem, (100vw - 480px) / 2 + 1rem));
+  padding-inline: max(1.25rem, (100vw - 480px) / 2 + 1.25rem);
+}
+.bleed-flush {
+  margin-inline: calc(-1 * max(0px, (100vw - 480px) / 2));
+  padding-inline: max(0.5rem, (100vw - 480px) / 2 + 0.5rem);
+}
+body { overflow-x: clip; }
+
+/* Figures on blinds and stops */
+.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -0.01em; }
+
+@utility card-fola {
+  background: var(--color-card);
+  color: var(--color-card-foreground);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft-value);
+  border: 1px solid var(--color-border);
+}
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 1.1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: background-color 150ms, color 150ms, transform 150ms, border-color 150ms;
+  cursor: pointer;
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:active { transform: scale(0.98); }
+}
+@utility btn-primary {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  &:hover { background: color-mix(in oklab, var(--color-primary) 82%, white); }
+}
+@utility btn-signal {
+  background: var(--color-signal);
+  color: var(--color-signal-foreground);
+  &:hover { background: color-mix(in oklab, var(--color-signal) 88%, black); }
+}
+@utility btn-success {
+  background: var(--color-success);
+  color: oklch(1 0 0);
+  &:hover { background: color-mix(in oklab, var(--color-success) 88%, black); }
+}
+@utility btn-outline {
+  background: transparent;
+  color: var(--color-foreground);
+  border: 2px solid var(--color-foreground);
+  &:hover { background: var(--color-muted); }
+}
+@utility btn-ghost {
+  background: transparent;
+  color: var(--color-foreground);
+  &:hover { background: var(--color-muted); }
+}
+@utility btn-danger {
+  background: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+}
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--color-border);
+  background: var(--color-card);
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+  &:hover { border-color: var(--color-foreground); }
+  &[aria-pressed="true"] {
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+    border-color: var(--color-primary);
+  }
+}
+
+/* Route line: thick yellow line with stops (white discs, thick black ring). */
+.route { position: relative; }
+.route-line {
+  position: absolute; left: 13px; top: 14px; bottom: 14px; width: 8px;
+  background: var(--color-signal); border-radius: 999px;
+}
+.stop-dot {
+  position: relative; z-index: 1; flex: none;
+  width: 34px; height: 34px; border-radius: 999px;
+  background: var(--color-card); border: 6px solid var(--color-foreground);
+}
+.stop-dot[data-tone="chance"] { border-color: var(--color-signal); background: var(--color-primary-soft); }
+/* A list whose stops sit on one yellow line (line is drawn by the list, so every child stays an <li>). */
+.route-ol { position: relative; list-style: none; }
+.route-ol::before {
+  content: ""; position: absolute; left: calc(1.25rem + 13px); top: 1.4rem; bottom: 1.4rem; width: 8px;
+  background: var(--color-signal); border-radius: 999px;
+}
+/* Two routes: a thin grey "no change" track runs beside the yellow "with Fola" line. */
+.route-two::after {
+  content: ""; position: absolute; left: calc(1.25rem + 6px); top: 2.2rem; bottom: 1.4rem; width: 3px;
+  background: var(--color-chart-2); border-radius: 999px;
+}
+.stop-dot[data-tone="risk"] { border-color: var(--color-destructive); }
+.stop-dot[data-tone="here"] { background: var(--color-signal); }
+.stop-dot[data-tone="done"] { background: var(--color-success); border-color: var(--color-success); }
+
+/* Talk button rings */
+@keyframes fola-ring {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+.talk-ring {
+  position: absolute; inset: 0; border-radius: 999px;
+  background: var(--color-signal);
+  animation: fola-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+.talk-ring.delay { animation-delay: 1.2s; }
+.talk-ring.fast { animation-duration: 1.1s; }
+
+/* Signature moment: a stop ticks green when its action is approved */
+@keyframes stop-tick {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.stop-tick { animation: stop-tick 520ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Voice captions: each sentence fades and rises in, no typewriter. */
+@keyframes caption-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.caption-in { animation: caption-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .talk-ring { display: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@keyframes fola-dot { 0%, 80%, 100% { opacity: 0.25 } 40% { opacity: 1 } }
+.typing-dot { animation: fola-dot 1.2s infinite; }
+
+.print-only { display: none; }
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  html, body { background: white !important; color: black !important; font-size: 12pt; }
+  .card-fola { box-shadow: none !important; border: 1px solid #999 !important; background: white !important; color: black !important; break-inside: avoid; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 10pt; }
+  * { color: black !important; }
+}
