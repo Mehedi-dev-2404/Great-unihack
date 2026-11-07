@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# Hackathon agent message board: a GitHub issue used as a chat channel.
+# REST only (gh api repos/...); no GraphQL, jq, or Python.
+#
+# Usage: tools/board {post "[Name's Agent] msg" | unread | wait [--interval N] | read [-n N] | whoami}
+# Env:   BOARD_ISSUE (default 1), BOARD_REPO (default: from git remote), BOARD_WAIT=off to skip wait hint
+set -euo pipefail
+
+ISSUE="${BOARD_ISSUE:-1}"
+
+detect_repo() {
+  local url
+  url=$(git remote get-url origin 2>/dev/null) || { echo "board: no git remote; set BOARD_REPO=owner/repo" >&2; exit 1; }
+  url="${url%.git}"
+  url="${url#*github.com[:/]}"
+  echo "$url"
+}
+REPO="${BOARD_REPO:-$(detect_repo)}"
+STATE_DIR="$HOME/.local/state/board"
+LAST_FILE="$STATE_DIR/${REPO//\//_}_${ISSUE}.last"
+API="repos/$REPO/issues/$ISSUE/comments"
+
+whoami_cmd() { gh api user -q .login; }
+
+get_last() { [ -f "$LAST_FILE" ] && cat "$LAST_FILE" || echo 0; }
+
+# Print comments with id > $1, formatted. Sets globals NEW_MAX (highest id seen),
+# NEW_COUNT, and NEW_OTHERS (comments by someone other than me). Flags mentions.
+fetch_new() {
+  local last="$1" me="$2" id="" author="" date="" body="" line
+  NEW_MAX="$last"; NEW_COUNT=0; NEW_OTHERS=0
+  local out
+  out=$(gh api --paginate "$API?per_page=100" --jq \
+    '.[] | select(.id > '"$last"') | "\u0001\(.id)\t\(.user.login)\t\(.created_at)\n\(.body)"')
+  [ -z "$out" ] && return 0
+  flush() {
+    [ -z "$id" ] && return 0
+    local tag=""
+    if printf '%s' "$body" | grep -Eqi "@(${me}|all)([^A-Za-z0-9_-]|$)"; then tag="[MENTION] "; fi
+    printf '%s#%s %s @ %s\n%s\n\n' "$tag" "$id" "$author" "$date" "$body"
+    NEW_COUNT=$((NEW_COUNT+1))
+    [ "$author" != "$me" ] && NEW_OTHERS=$((NEW_OTHERS+1))
+    [ "$id" -gt "$NEW_MAX" ] && NEW_MAX="$id"
+    return 0
+  }
+  while IFS= read -r line || [ -n "$line" ]; do
+    if [ "${line:0:1}" = $'\001' ]; then
+      flush
+      IFS=$'\t' read -r id author date <<<"${line:1}"
+      body=""
+    else
+      body+="${body:+$'\n'}${line%$'\r'}"
+    fi
+  done <<<"$out"
+  flush
+}
+
+save_last() { mkdir -p "$STATE_DIR"; echo "$1" > "$LAST_FILE"; }
+
+cmd_post() {
+  local msg="${1:-}"
+  [ -n "$msg" ] || { echo "usage: board post \"[Name's Agent] message\"" >&2; exit 2; }
+  [ "${msg:0:1}" = "[" ] || { echo "board: message must start with [Name's Agent]" >&2; exit 2; }
+  gh api -X POST "$API" -f body="$msg" --jq '.html_url'
+}
+
+cmd_unread() {
+  local me; me=$(whoami_cmd)
+  fetch_new "$(get_last)" "$me"
+  [ "$NEW_COUNT" -gt 0 ] && save_last "$NEW_MAX"
+  [ "$NEW_COUNT" -gt 0 ] || echo "(no new board messages)"
+  if [ "${BOARD_WAIT:-on}" != "off" ] && [ "$NEW_COUNT" -eq 0 ]; then
+    echo "hint: tools/board wait  # blocks until someone else posts"
+  fi
+}
+
+cmd_wait() {
+  local interval=30
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --interval) interval="${2:?--interval needs a number}"; shift 2 ;;
+      *) echo "board: unknown option $1" >&2; exit 2 ;;
+    esac
+  done
+  local me; me=$(whoami_cmd)
+  # Own posts made since the last check shouldn't wake us; start from the latest id.
+  local last; last=$(get_last)
+  while true; do
+    local out
+    out=$(fetch_new "$last" "$me"; echo "$NEW_MAX $NEW_OTHERS")
+    # fetch_new ran in a subshell; re-run state from the trailer line
+    local trailer="${out##*$'\n'}"; local text="${out%$'\n'*}"
+    local max="${trailer% *}" others="${trailer#* }"
+    if [ "$others" -gt 0 ]; then
+      printf '%s\n' "$text"
+      save_last "$max"
+      exit 0
+    fi
+    last="$max"
+    sleep "$interval"
+  done
+}
+
+cmd_read() {
+  local n=20
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -n) n="${2:?-n needs a number}"; shift 2 ;;
+      *) echo "board: unknown option $1" >&2; exit 2 ;;
+    esac
+  done
+  # REST has no "last N"; fetch all pages and keep the tail.
+  gh api --paginate "$API?per_page=100" --jq \
+    '.[] | "\u0001#\(.id) \(.user.login) @ \(.created_at)\n\(.body)\n"' \
+    | awk -v n="$n" 'BEGIN{RS="\001"} NR>1{a[++c]=$0} END{s=c-n+1; if(s<1)s=1; for(i=s;i<=c;i++)printf "%s\n", a[i]}'
+}
+
+case "${1:-}" in
+  post)   shift; cmd_post "$@" ;;
+  unread) shift; cmd_unread ;;
+  wait)   shift; cmd_wait "$@" ;;
+  read)   shift; cmd_read "$@" ;;
+  whoami) whoami_cmd ;;
+  *) echo "usage: board {post \"[Name's Agent] msg\"|unread|wait [--interval N]|read [-n N]|whoami}" >&2; exit 2 ;;
+esac
