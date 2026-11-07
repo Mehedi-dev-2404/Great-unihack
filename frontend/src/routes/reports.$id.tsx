@@ -213,37 +213,39 @@ function ReportDetail() {
         </section>
       )}
 
-      <div className="no-print mt-8">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <button className="btn btn-ghost text-destructive" aria-label="Delete this report">
-              <Trash2 className="size-5" aria-hidden /> Delete report
-            </button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete this report?</AlertDialogTitle>
-              <AlertDialogDescription className="text-base">
-                This removes it from your record. Are you sure?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="min-h-12">Keep it</AlertDialogCancel>
-              <AlertDialogAction
-                className="min-h-12 bg-destructive text-destructive-foreground"
-                onClick={async () => {
-                  await api.deleteReport(r.id);
-                  await qc.invalidateQueries({ queryKey: qk.reports });
-                  toast("Report deleted");
-                  navigate({ to: "/reports" });
-                }}
-              >
-                Yes, delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
+      {api.isMock && (
+        <div className="no-print mt-8">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="btn btn-ghost text-destructive" aria-label="Delete this report">
+                <Trash2 className="size-5" aria-hidden /> Delete report
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete this report?</AlertDialogTitle>
+                <AlertDialogDescription className="text-base">
+                  This removes it from your record. Are you sure?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="min-h-12">Keep it</AlertDialogCancel>
+                <AlertDialogAction
+                  className="min-h-12 bg-destructive text-destructive-foreground"
+                  onClick={async () => {
+                    await api.deleteReport(r.id);
+                    await qc.invalidateQueries({ queryKey: qk.reports });
+                    toast("Report deleted");
+                    navigate({ to: "/reports" });
+                  }}
+                >
+                  Yes, delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Fola gives guidance, not regulated financial or legal advice. Every action here was approved

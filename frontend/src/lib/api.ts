@@ -540,12 +540,22 @@ async function liveChat(body: ChatRequest): Promise<ChatResponse> {
   };
 }
 
+const ACTION_TYPES: FolaAction["type"][] = [
+  "send_email",
+  "fill_form",
+  "block_merchant",
+  "cancel_subscription",
+  "submit_claim",
+];
+
 async function liveApprove(id: string): Promise<ApproveResponse> {
   const r = await http<BReport>(`/api/actions/${id}/approve`, { method: "POST" });
   return {
     action: {
       id,
-      type: "send_email",
+      type: ACTION_TYPES.includes(r.type as FolaAction["type"])
+        ? (r.type as FolaAction["type"])
+        : "send_email",
       title: r.title,
       preview: { to: "", subject: "", body: "" },
       status: "approved",
@@ -615,8 +625,13 @@ export const api = {
     }
     if (!useMock) await http<unknown>("/api/reset", { method: "POST" }).catch(() => undefined);
   },
+  /** The backend keeps reports as a record and has no per-report delete, so this only works on mock data. */
   deleteReport: async (id: string) => mock.deleteReport(id),
-  deleteEverything: async () => mock.deleteEverything(),
+  /** Live: the backend reset clears actions, reports and learned facts. */
+  deleteEverything: async () => {
+    if (useMock) return mock.deleteEverything();
+    await api.reset();
+  },
   setVoiceListening: (on: boolean) => mock.setVoiceListening(on),
 };
 
