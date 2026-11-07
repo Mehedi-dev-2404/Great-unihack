@@ -1,0 +1,123 @@
+{
+  "id": "u01",
+  "name": "Amara Okafor",
+  "age": 34,
+  "city": "Manchester",
+  "postcode_area": "M11",
+  "council": "Manchester City Council",
+  "nation": "England",
+  "household": {
+    "adults": 1,
+    "relationship_status": "single parent",
+    "children": [
+      {
+        "name": "Tobi",
+        "age": 3,
+        "in_school": false
+      },
+      {
+        "name": "Zara",
+        "age": 9,
+        "in_school": true
+      },
+      {
+        "name": "Daniel",
+        "age": 14,
+        "in_school": true
+      }
+    ]
+  },
+  "housing": {
+    "tenure": "social rent",
+    "landlord": "One Manchester",
+    "monthly_rent": 562.0,
+    "council_tax_band": "A",
+    "council_tax_discounts": []
+  },
+  "employment": "Part-time shop assistant (Greggs), 12 hours/week",
+  "monthly_earned_income": 395.0,
+  "monthly_income": 2069.53,
+  "benefits": [
+    {
+      "name": "Universal Credit",
+      "monthly_amount": 1412.4,
+      "children_included": 2,
+      "notes": "Award includes the child element for 2 children only (set before the two-child limit was removed on 6 April 2026). Paid on the 14th, after deductions for an advance repayment."
+    },
+    {
+      "name": "Child Benefit",
+      "monthly_amount": 262.13,
+      "children_included": 3,
+      "notes": "Paid every 4 weeks (£241.92)."
+    }
+  ],
+  "savings": [
+    {
+      "name": "Manchester Credit Union savings",
+      "balance": 420.0
+    }
+  ],
+  "debts": [
+    {
+      "name": "Very catalogue",
+      "monthly_payment": 60.0
+    },
+    {
+      "name": "StepChange debt management plan",
+      "monthly_payment": 85.0
+    }
+  ],
+  "facts": {},
+  "net_worth": 561.37,
+  "net_worth_note": "Current account balance plus credit union savings, measured on the 6th of each month.",
+  "net_worth_history": [
+    {
+      "month": "2025-12",
+      "net_worth": 905.1
+    },
+    {
+      "month": "2026-01",
+      "net_worth": 842.75
+    },
+    {
+      "month": "2026-02",
+      "net_worth": 798.3
+    },
+    {
+      "month": "2026-03",
+      "net_worth": 760.15
+    },
+    {
+      "month": "2026-04",
+      "net_worth": 731.9
+    },
+    {
+      "month": "2026-05",
+      "net_worth": 702.45
+    },
+    {
+      "month": "2026-06",
+      "net_worth": 688.2
+    },
+    {
+      "month": "2026-07",
+      "net_worth": 715.6
+    },
+    {
+      "month": "2026-08",
+      "net_worth": 737.62
+    },
+    {
+      "month": "2026-09",
+      "net_worth": 542.2
+    },
+    {
+      "month": "2026-10",
+      "net_worth": 573.04
+    },
+    {
+      "month": "2026-11",
+      "net_worth": 561.37
+    }
+  ]
+}

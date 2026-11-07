@@ -1,0 +1,25 @@
+{
+    "type": "webhook",
+    "name": "approve_action",
+    "description": "Carry out a drafted action (send the email or message, cancel or block the subscription) and save a dated report. Only call this after you have read the draft summary aloud and the user has clearly said yes in this turn. Never call it on silence, a maybe, or a question.",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/actions/{action_id}/approve",
+        "method": "POST",
+        "request_headers": {
+            "Content-Type": "application/json"
+        },
+        "path_params_schema": {
+            "action_id": {
+                "type": "string",
+                "description": "The id of the pending action, exactly as returned by propose_action (the 'id' field)."
+            }
+        }
+    },
+    "response_timeout_secs": 30,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": true,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

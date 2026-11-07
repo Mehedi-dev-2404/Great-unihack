@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "type": "webhook",
+            "config": "tool_configs/get_profile.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/get_notifications.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/save_facts.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/propose_action.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/approve_action.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/decline_action.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/get_reports.json"
+        },
+        {
+            "type": "webhook",
+            "config": "tool_configs/get_forecast.json"
+        }
+    ]
+}

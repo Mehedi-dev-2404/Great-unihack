@@ -1,0 +1,25 @@
+{
+    "type": "webhook",
+    "name": "decline_action",
+    "description": "Cancel a drafted action the user does not want. Call this when the user says no, not now, or wants to change something (then propose a new action with the changes).",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/actions/{action_id}/decline",
+        "method": "POST",
+        "request_headers": {
+            "Content-Type": "application/json"
+        },
+        "path_params_schema": {
+            "action_id": {
+                "type": "string",
+                "description": "The id of the pending action, exactly as returned by propose_action (the 'id' field)."
+            }
+        }
+    },
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": false,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "type": "webhook",
+    "name": "get_profile",
+    "description": "Get the user's saved profile: name, household (children and their ages), benefits they already receive, income, accounts and net worth. Call this once at the very start of every conversation, before you say anything about their situation. Never ask the user for a fact that is already in this profile.",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/profile",
+        "method": "GET",
+        "request_headers": {
+            "Content-Type": "application/json"
+        }
+    },
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": false,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

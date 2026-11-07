@@ -1,0 +1,79 @@
+{
+    "type": "webhook",
+    "name": "save_facts",
+    "description": "Save new facts the user has just told you, so they are never asked again. Call this as soon as the user confirms something new about themselves (for example a child's age, who lives with them, whether a child is in full-time education, a change in work or rent). Do not save guesses, only what the user actually said.",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/profile/facts",
+        "method": "POST",
+        "request_headers": {
+            "Content-Type": "application/json"
+        },
+        "request_body_schema": {
+            "type": "object",
+            "description": "The new facts to merge into the user's profile.",
+            "required": [
+                "facts"
+            ],
+            "properties": {
+                "facts": {
+                    "type": "object",
+                    "description": "The new facts. Fill only the fields the user just told you; leave the rest out.",
+                    "required": [],
+                    "properties": {
+                        "children_living_with_user": {
+                            "type": "integer",
+                            "description": "How many children live with the user most of the time."
+                        },
+                        "all_children_under_18": {
+                            "type": "boolean",
+                            "description": "True if the user confirmed every child is under 18."
+                        },
+                        "children_ages": {
+                            "type": "string",
+                            "description": "Ages of the children, comma separated, e.g. '15, 9, 4'."
+                        },
+                        "eldest_in_approved_education": {
+                            "type": "boolean",
+                            "description": "True if a child aged 16 to 19 is in full-time non-advanced education or approved training (school, college, A levels, T levels, NVQ level 3 or below)."
+                        },
+                        "employment_status": {
+                            "type": "string",
+                            "description": "e.g. 'employed full time', 'part time', 'self-employed', 'not working', 'unable to work'."
+                        },
+                        "housing": {
+                            "type": "string",
+                            "description": "e.g. 'private renting', 'council or housing association', 'own with mortgage', 'living with family'."
+                        },
+                        "monthly_rent_pounds": {
+                            "type": "number",
+                            "description": "Monthly rent in pounds, if they told you."
+                        },
+                        "has_disability_or_health_condition": {
+                            "type": "boolean",
+                            "description": "True if the user or someone in the household has a disability or long-term health condition."
+                        },
+                        "is_carer": {
+                            "type": "boolean",
+                            "description": "True if the user cares for someone at least 35 hours a week."
+                        },
+                        "subscription_wanted": {
+                            "type": "boolean",
+                            "description": "Whether the user says they meant to sign up to the flagged subscription."
+                        },
+                        "other": {
+                            "type": "string",
+                            "description": "Any other new fact, written as 'key: value; key: value', e.g. 'partner_lives_with_user: yes'."
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": false,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

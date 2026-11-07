@@ -1,0 +1,19 @@
+{
+    "type": "webhook",
+    "name": "get_notifications",
+    "description": "Get the user's current alerts. Each alert has id, type ('demographic' for benefits and council or government rules, 'financial' for unusual transactions), title, body and severity. Call this at the start, right after get_profile, and use the alert id as notification_id when you propose an action about it.",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/notifications",
+        "method": "GET",
+        "request_headers": {
+            "Content-Type": "application/json"
+        }
+    },
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": false,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

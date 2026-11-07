@@ -1,0 +1,19 @@
+{
+    "type": "webhook",
+    "name": "get_reports",
+    "description": "Get the dated reports of actions already taken for this user, newest first. Use it when the user asks what has been done, wants proof for the council, a landlord or a lawyer, or before proposing something that may already have been done.",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/reports",
+        "method": "GET",
+        "request_headers": {
+            "Content-Type": "application/json"
+        }
+    },
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": false,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "type": "webhook",
+    "name": "get_forecast",
+    "description": "Get a forecast of the user's money over the coming months (projected balance and net worth, and the effect of changes such as a new benefit payment or a cancelled subscription). Use it to explain in plain words what a change means for them over time.",
+    "api_schema": {
+        "url": "https://API_BASE_URL/api/forecast",
+        "method": "GET",
+        "request_headers": {
+            "Content-Type": "application/json"
+        }
+    },
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "force_pre_tool_speech": false,
+    "assignments": [],
+    "dynamic_variables": {
+        "dynamic_variable_placeholders": {}
+    }
+}

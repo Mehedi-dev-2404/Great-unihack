@@ -1,0 +1,183 @@
+[
+  {
+    "id": "uc_two_child_limit_removed",
+    "notification_id": "n-uc-child-element",
+    "name": "Universal Credit child element for every child (two-child limit removed)",
+    "type": "benefit",
+    "authority": "DWP",
+    "description": "The two-child limit in Universal Credit was removed from 6 April 2026. The child element can now be paid for every child or qualifying young person you are responsible for, not just the first two. If your award still only includes two children, you can ask DWP through your UC journal to add the others.",
+    "eligibility": {
+      "benefits_any": [
+        "Universal Credit"
+      ],
+      "min_children": 3,
+      "all": [
+        {
+          "field": "on_universal_credit",
+          "op": "==",
+          "value": true
+        },
+        {
+          "field": "children_count",
+          "op": ">=",
+          "value": 3
+        },
+        {
+          "field": "all_children_under_18",
+          "op": "==",
+          "value": true
+        },
+        {
+          "field": "uc_children_included",
+          "op": "<",
+          "value_field": "children_count"
+        }
+      ],
+      "required_facts": {
+        "children_live_with_user": true
+      },
+      "fact_questions": {
+        "children_live_with_user": "Do all three of your children live with you, and are they all under 18 (or under 20 and in approved education or training)?"
+      }
+    },
+    "follow_up_questions": [
+      "Do all three of your children live with you, and are they all under 18 (or under 20 and in approved education or training)?"
+    ],
+    "monthly_value": 303.94,
+    "value_basis": "per_missing_child",
+    "how_to_apply": "Report a change of circumstances, or add a journal note, in your Universal Credit online account asking DWP to include the child element for all eligible children.",
+    "source_url": "https://www.gov.uk/universal-credit/what-youll-get",
+    "action_type": "submit_claim"
+  },
+  {
+    "id": "council_tax_single_person_discount",
+    "notification_id": "n-council-tax-spd",
+    "name": "Council Tax single person discount (25%)",
+    "type": "council",
+    "authority": "Manchester City Council",
+    "description": "If you are the only adult (18 or over) living in your home, you can get 25% off your Council Tax bill. Children do not count as adults for this discount.",
+    "eligibility": {
+      "adults_max": 1,
+      "all": [
+        {
+          "field": "adults",
+          "op": "==",
+          "value": 1
+        },
+        {
+          "field": "council_tax_discounts",
+          "op": "not_contains",
+          "value": "single_person"
+        }
+      ],
+      "required_facts": {}
+    },
+    "follow_up_questions": [
+      "Is anyone else aged 18 or over living with you, even part of the time?"
+    ],
+    "monthly_value": null,
+    "value_basis": "percent_of_council_tax",
+    "value_percent": 25,
+    "value_from_transactions": {
+      "category": "council_tax"
+    },
+    "how_to_apply": "Apply to Manchester City Council for a single person discount on its Council Tax pages.",
+    "source_url": "https://www.gov.uk/council-tax/discounts-for-people-living-alone",
+    "action_type": "send_email"
+  },
+  {
+    "id": "healthy_start",
+    "notification_id": "n-healthy-start",
+    "name": "Healthy Start (NHS help to buy food and milk)",
+    "type": "benefit",
+    "authority": "NHS Business Services Authority",
+    "description": "If you get Universal Credit, have a child under 4 (or are at least 10 weeks pregnant), and your family's take-home pay from work is £408 a month or less, you can get a Healthy Start card. It pays £4.25 a week for each child aged 1 to 4 (£8.50 a week for babies under 1) to spend on milk, fruit, vegetables and pulses, plus free vitamins.",
+    "eligibility": {
+      "benefits_any": [
+        "Universal Credit"
+      ],
+      "min_children": 1,
+      "max_child_age": 4,
+      "all": [
+        {
+          "field": "on_universal_credit",
+          "op": "==",
+          "value": true
+        },
+        {
+          "field": "youngest_child_age",
+          "op": "<",
+          "value": 4
+        },
+        {
+          "field": "monthly_earned_income",
+          "op": "<=",
+          "value": 408
+        },
+        {
+          "field": "benefit_names",
+          "op": "not_contains",
+          "value": "Healthy Start"
+        }
+      ],
+      "required_facts": {}
+    },
+    "follow_up_questions": [
+      "Is your take-home pay from work £408 a month or less?"
+    ],
+    "monthly_value": 18.42,
+    "value_basis": "fixed",
+    "value_note": "£4.25 a week for one child aged 1 to 4 (£4.25 x 52 / 12).",
+    "how_to_apply": "Apply online through the NHS Healthy Start website.",
+    "source_url": "https://www.gov.uk/healthy-start",
+    "action_type": "fill_form"
+  },
+  {
+    "id": "free_school_meals_uc",
+    "notification_id": "n-free-school-meals",
+    "name": "Free school meals",
+    "type": "council",
+    "authority": "Manchester City Council",
+    "description": "In England, children can get free school meals if their family gets Universal Credit. From September 2026 this covers all households on Universal Credit, whatever their earnings. You apply through your local council.",
+    "eligibility": {
+      "benefits_any": [
+        "Universal Credit"
+      ],
+      "all": [
+        {
+          "field": "on_universal_credit",
+          "op": "==",
+          "value": true
+        },
+        {
+          "field": "nation",
+          "op": "==",
+          "value": "England"
+        },
+        {
+          "field": "school_age_children_count",
+          "op": ">=",
+          "value": 1
+        }
+      ],
+      "required_facts": {
+        "already_getting_free_school_meals": false
+      },
+      "fact_questions": {
+        "already_getting_free_school_meals": "Are Zara and Daniel already getting free school meals?"
+      }
+    },
+    "follow_up_questions": [
+      "Are Zara and Daniel already getting free school meals?"
+    ],
+    "monthly_value": null,
+    "value_basis": "transactions",
+    "value_from_transactions": {
+      "merchant": "ParentPay",
+      "description_contains": "SCHOOL DINNERS"
+    },
+    "how_to_apply": "Apply to Manchester City Council for free school meals (the school will then stop charging for dinners).",
+    "source_url": "https://www.gov.uk/apply-free-school-meals",
+    "action_type": "fill_form"
+  }
+]

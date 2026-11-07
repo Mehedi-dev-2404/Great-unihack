@@ -1,0 +1,986 @@
+[
+  {
+    "id": "t001",
+    "date": "2026-08-01",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -109.63,
+    "category": "groceries"
+  },
+  {
+    "id": "t002",
+    "date": "2026-08-01",
+    "description": "MANCHESTER CC CTAX DD",
+    "merchant": "Manchester City Council",
+    "amount": -41.6,
+    "category": "council_tax"
+  },
+  {
+    "id": "t003",
+    "date": "2026-08-01",
+    "description": "RENT ONE MANCHESTER DD",
+    "merchant": "One Manchester",
+    "amount": -562.0,
+    "category": "rent"
+  },
+  {
+    "id": "t004",
+    "date": "2026-08-02",
+    "description": "BEE NETWORK BUS PASS",
+    "merchant": "Bee Network",
+    "amount": -80.0,
+    "category": "transport"
+  },
+  {
+    "id": "t005",
+    "date": "2026-08-02",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t006",
+    "date": "2026-08-03",
+    "description": "HMRC CHILD BENEFIT",
+    "merchant": "HMRC Child Benefit",
+    "amount": 241.92,
+    "category": "benefits"
+  },
+  {
+    "id": "t007",
+    "date": "2026-08-03",
+    "description": "OCTOPUS ENERGY DD",
+    "merchant": "Octopus Energy",
+    "amount": -118.0,
+    "category": "utilities"
+  },
+  {
+    "id": "t008",
+    "date": "2026-08-04",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -8.28,
+    "category": "groceries"
+  },
+  {
+    "id": "t009",
+    "date": "2026-08-04",
+    "description": "VIRGIN MEDIA DD",
+    "merchant": "Virgin Media",
+    "amount": -32.0,
+    "category": "broadband"
+  },
+  {
+    "id": "t010",
+    "date": "2026-08-05",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -22.89,
+    "category": "children"
+  },
+  {
+    "id": "t011",
+    "date": "2026-08-05",
+    "description": "UNITED UTILITIES DD",
+    "merchant": "United Utilities",
+    "amount": -36.5,
+    "category": "utilities"
+  },
+  {
+    "id": "t012",
+    "date": "2026-08-06",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -18.4,
+    "category": "household"
+  },
+  {
+    "id": "t013",
+    "date": "2026-08-08",
+    "description": "GIFFGAFF MONTHLY",
+    "merchant": "giffgaff",
+    "amount": -10.0,
+    "category": "phone"
+  },
+  {
+    "id": "t014",
+    "date": "2026-08-08",
+    "description": "LIDL STORES MANCHESTER",
+    "merchant": "Lidl",
+    "amount": -112.15,
+    "category": "groceries"
+  },
+  {
+    "id": "t015",
+    "date": "2026-08-09",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t016",
+    "date": "2026-08-11",
+    "description": "NETFLIX.COM",
+    "merchant": "Netflix",
+    "amount": -5.99,
+    "category": "subscription"
+  },
+  {
+    "id": "t017",
+    "date": "2026-08-11",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -15.44,
+    "category": "groceries"
+  },
+  {
+    "id": "t018",
+    "date": "2026-08-13",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -28.27,
+    "category": "household"
+  },
+  {
+    "id": "t019",
+    "date": "2026-08-14",
+    "description": "DWP UC PAYMENT",
+    "merchant": "DWP Universal Credit",
+    "amount": 1412.4,
+    "category": "benefits"
+  },
+  {
+    "id": "t020",
+    "date": "2026-08-15",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -95.26,
+    "category": "groceries"
+  },
+  {
+    "id": "t021",
+    "date": "2026-08-15",
+    "description": "VERY.CO.UK PAYMENT",
+    "merchant": "Very",
+    "amount": -60.0,
+    "category": "debt_repayment"
+  },
+  {
+    "id": "t022",
+    "date": "2026-08-16",
+    "description": "B&M RETAIL",
+    "merchant": "B&M",
+    "amount": -17.84,
+    "category": "household"
+  },
+  {
+    "id": "t023",
+    "date": "2026-08-16",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t024",
+    "date": "2026-08-18",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -12.64,
+    "category": "groceries"
+  },
+  {
+    "id": "t025",
+    "date": "2026-08-19",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -22.87,
+    "category": "children"
+  },
+  {
+    "id": "t026",
+    "date": "2026-08-20",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -14.48,
+    "category": "household"
+  },
+  {
+    "id": "t027",
+    "date": "2026-08-20",
+    "description": "TV LICENCE MBP",
+    "merchant": "TV Licensing",
+    "amount": -14.95,
+    "category": "bills"
+  },
+  {
+    "id": "t028",
+    "date": "2026-08-22",
+    "description": "TESCO STORES MANCHESTER",
+    "merchant": "Tesco",
+    "amount": -106.14,
+    "category": "groceries"
+  },
+  {
+    "id": "t029",
+    "date": "2026-08-23",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t030",
+    "date": "2026-08-24",
+    "description": "PRIMARK MANCHESTER (school uniform)",
+    "merchant": "Primark",
+    "amount": -64.5,
+    "category": "clothing"
+  },
+  {
+    "id": "t031",
+    "date": "2026-08-25",
+    "description": "BOOTS MANCHESTER",
+    "merchant": "Boots",
+    "amount": -13.81,
+    "category": "health"
+  },
+  {
+    "id": "t032",
+    "date": "2026-08-25",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -8.29,
+    "category": "groceries"
+  },
+  {
+    "id": "t033",
+    "date": "2026-08-26",
+    "description": "STEPCHANGE DMP",
+    "merchant": "StepChange Debt Plan",
+    "amount": -85.0,
+    "category": "debt_repayment"
+  },
+  {
+    "id": "t034",
+    "date": "2026-08-27",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -17.18,
+    "category": "household"
+  },
+  {
+    "id": "t035",
+    "date": "2026-08-28",
+    "description": "GREGGS PLC PAYROLL",
+    "merchant": "Greggs (wages)",
+    "amount": 395.0,
+    "category": "income"
+  },
+  {
+    "id": "t036",
+    "date": "2026-08-29",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -109.9,
+    "category": "groceries"
+  },
+  {
+    "id": "t037",
+    "date": "2026-08-30",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t038",
+    "date": "2026-08-31",
+    "description": "HMRC CHILD BENEFIT",
+    "merchant": "HMRC Child Benefit",
+    "amount": 241.92,
+    "category": "benefits"
+  },
+  {
+    "id": "t039",
+    "date": "2026-09-01",
+    "description": "MANCHESTER CC CTAX DD",
+    "merchant": "Manchester City Council",
+    "amount": -41.6,
+    "category": "council_tax"
+  },
+  {
+    "id": "t040",
+    "date": "2026-09-01",
+    "description": "RENT ONE MANCHESTER DD",
+    "merchant": "One Manchester",
+    "amount": -562.0,
+    "category": "rent"
+  },
+  {
+    "id": "t041",
+    "date": "2026-09-01",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -13.99,
+    "category": "groceries"
+  },
+  {
+    "id": "t042",
+    "date": "2026-09-02",
+    "description": "BEE NETWORK BUS PASS",
+    "merchant": "Bee Network",
+    "amount": -80.0,
+    "category": "transport"
+  },
+  {
+    "id": "t043",
+    "date": "2026-09-02",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -24.36,
+    "category": "children"
+  },
+  {
+    "id": "t044",
+    "date": "2026-09-03",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -17.53,
+    "category": "household"
+  },
+  {
+    "id": "t045",
+    "date": "2026-09-03",
+    "description": "OCTOPUS ENERGY DD",
+    "merchant": "Octopus Energy",
+    "amount": -118.0,
+    "category": "utilities"
+  },
+  {
+    "id": "t046",
+    "date": "2026-09-04",
+    "description": "VIRGIN MEDIA DD",
+    "merchant": "Virgin Media",
+    "amount": -32.0,
+    "category": "broadband"
+  },
+  {
+    "id": "t047",
+    "date": "2026-09-05",
+    "description": "LIDL STORES MANCHESTER",
+    "merchant": "Lidl",
+    "amount": -114.05,
+    "category": "groceries"
+  },
+  {
+    "id": "t048",
+    "date": "2026-09-05",
+    "description": "UNITED UTILITIES DD",
+    "merchant": "United Utilities",
+    "amount": -36.5,
+    "category": "utilities"
+  },
+  {
+    "id": "t049",
+    "date": "2026-09-06",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t050",
+    "date": "2026-09-06",
+    "description": "SCHOOL TRIP PARENTPAY",
+    "merchant": "ParentPay",
+    "amount": -15.0,
+    "category": "children"
+  },
+  {
+    "id": "t051",
+    "date": "2026-09-08",
+    "description": "GIFFGAFF MONTHLY",
+    "merchant": "giffgaff",
+    "amount": -10.0,
+    "category": "phone"
+  },
+  {
+    "id": "t052",
+    "date": "2026-09-08",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -8.07,
+    "category": "groceries"
+  },
+  {
+    "id": "t053",
+    "date": "2026-09-10",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -26.89,
+    "category": "household"
+  },
+  {
+    "id": "t054",
+    "date": "2026-09-11",
+    "description": "NETFLIX.COM",
+    "merchant": "Netflix",
+    "amount": -5.99,
+    "category": "subscription"
+  },
+  {
+    "id": "t055",
+    "date": "2026-09-12",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -111.15,
+    "category": "groceries"
+  },
+  {
+    "id": "t056",
+    "date": "2026-09-13",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t057",
+    "date": "2026-09-14",
+    "description": "DWP UC PAYMENT",
+    "merchant": "DWP Universal Credit",
+    "amount": 1412.4,
+    "category": "benefits"
+  },
+  {
+    "id": "t058",
+    "date": "2026-09-15",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -11.74,
+    "category": "groceries"
+  },
+  {
+    "id": "t059",
+    "date": "2026-09-15",
+    "description": "VERY.CO.UK PAYMENT",
+    "merchant": "Very",
+    "amount": -60.0,
+    "category": "debt_repayment"
+  },
+  {
+    "id": "t060",
+    "date": "2026-09-16",
+    "description": "B&M RETAIL",
+    "merchant": "B&M",
+    "amount": -15.35,
+    "category": "household"
+  },
+  {
+    "id": "t061",
+    "date": "2026-09-16",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -25.83,
+    "category": "children"
+  },
+  {
+    "id": "t062",
+    "date": "2026-09-17",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -16.49,
+    "category": "household"
+  },
+  {
+    "id": "t063",
+    "date": "2026-09-18",
+    "description": "GOOGLE *YouTube Music",
+    "merchant": "YouTube Music",
+    "amount": -10.99,
+    "category": "subscription"
+  },
+  {
+    "id": "t064",
+    "date": "2026-09-19",
+    "description": "TESCO STORES MANCHESTER",
+    "merchant": "Tesco",
+    "amount": -101.75,
+    "category": "groceries"
+  },
+  {
+    "id": "t065",
+    "date": "2026-09-20",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t066",
+    "date": "2026-09-20",
+    "description": "TV LICENCE MBP",
+    "merchant": "TV Licensing",
+    "amount": -14.95,
+    "category": "bills"
+  },
+  {
+    "id": "t067",
+    "date": "2026-09-22",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -9.02,
+    "category": "groceries"
+  },
+  {
+    "id": "t068",
+    "date": "2026-09-24",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -15.55,
+    "category": "household"
+  },
+  {
+    "id": "t069",
+    "date": "2026-09-25",
+    "description": "BOOTS MANCHESTER",
+    "merchant": "Boots",
+    "amount": -12.47,
+    "category": "health"
+  },
+  {
+    "id": "t070",
+    "date": "2026-09-26",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -115.03,
+    "category": "groceries"
+  },
+  {
+    "id": "t071",
+    "date": "2026-09-26",
+    "description": "STEPCHANGE DMP",
+    "merchant": "StepChange Debt Plan",
+    "amount": -85.0,
+    "category": "debt_repayment"
+  },
+  {
+    "id": "t072",
+    "date": "2026-09-27",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t073",
+    "date": "2026-09-28",
+    "description": "GREGGS PLC PAYROLL",
+    "merchant": "Greggs (wages)",
+    "amount": 395.0,
+    "category": "income"
+  },
+  {
+    "id": "t074",
+    "date": "2026-09-28",
+    "description": "HMRC CHILD BENEFIT",
+    "merchant": "HMRC Child Benefit",
+    "amount": 241.92,
+    "category": "benefits"
+  },
+  {
+    "id": "t075",
+    "date": "2026-09-29",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -14.64,
+    "category": "groceries"
+  },
+  {
+    "id": "t076",
+    "date": "2026-09-30",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -24.92,
+    "category": "children"
+  },
+  {
+    "id": "t077",
+    "date": "2026-10-01",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -26.91,
+    "category": "household"
+  },
+  {
+    "id": "t078",
+    "date": "2026-10-01",
+    "description": "MANCHESTER CC CTAX DD",
+    "merchant": "Manchester City Council",
+    "amount": -41.6,
+    "category": "council_tax"
+  },
+  {
+    "id": "t079",
+    "date": "2026-10-01",
+    "description": "RENT ONE MANCHESTER DD",
+    "merchant": "One Manchester",
+    "amount": -562.0,
+    "category": "rent"
+  },
+  {
+    "id": "t080",
+    "date": "2026-10-02",
+    "description": "BEE NETWORK BUS PASS",
+    "merchant": "Bee Network",
+    "amount": -80.0,
+    "category": "transport"
+  },
+  {
+    "id": "t081",
+    "date": "2026-10-03",
+    "description": "LIDL STORES MANCHESTER",
+    "merchant": "Lidl",
+    "amount": -106.94,
+    "category": "groceries"
+  },
+  {
+    "id": "t082",
+    "date": "2026-10-03",
+    "description": "OCTOPUS ENERGY DD",
+    "merchant": "Octopus Energy",
+    "amount": -118.0,
+    "category": "utilities"
+  },
+  {
+    "id": "t083",
+    "date": "2026-10-04",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t084",
+    "date": "2026-10-04",
+    "description": "VIRGIN MEDIA DD",
+    "merchant": "Virgin Media",
+    "amount": -32.0,
+    "category": "broadband"
+  },
+  {
+    "id": "t085",
+    "date": "2026-10-05",
+    "description": "UNITED UTILITIES DD",
+    "merchant": "United Utilities",
+    "amount": -36.5,
+    "category": "utilities"
+  },
+  {
+    "id": "t086",
+    "date": "2026-10-06",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -18.7,
+    "category": "groceries"
+  },
+  {
+    "id": "t087",
+    "date": "2026-10-08",
+    "description": "GIFFGAFF MONTHLY",
+    "merchant": "giffgaff",
+    "amount": -10.0,
+    "category": "phone"
+  },
+  {
+    "id": "t088",
+    "date": "2026-10-08",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -20.06,
+    "category": "household"
+  },
+  {
+    "id": "t089",
+    "date": "2026-10-10",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -107.35,
+    "category": "groceries"
+  },
+  {
+    "id": "t090",
+    "date": "2026-10-11",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t091",
+    "date": "2026-10-11",
+    "description": "NETFLIX.COM",
+    "merchant": "Netflix",
+    "amount": -5.99,
+    "category": "subscription"
+  },
+  {
+    "id": "t092",
+    "date": "2026-10-13",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -17.12,
+    "category": "groceries"
+  },
+  {
+    "id": "t093",
+    "date": "2026-10-14",
+    "description": "DWP UC PAYMENT",
+    "merchant": "DWP Universal Credit",
+    "amount": 1412.4,
+    "category": "benefits"
+  },
+  {
+    "id": "t094",
+    "date": "2026-10-14",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -25.45,
+    "category": "children"
+  },
+  {
+    "id": "t095",
+    "date": "2026-10-15",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -23.9,
+    "category": "household"
+  },
+  {
+    "id": "t096",
+    "date": "2026-10-15",
+    "description": "VERY.CO.UK PAYMENT",
+    "merchant": "Very",
+    "amount": -60.0,
+    "category": "debt_repayment"
+  },
+  {
+    "id": "t097",
+    "date": "2026-10-16",
+    "description": "B&M RETAIL",
+    "merchant": "B&M",
+    "amount": -26.99,
+    "category": "household"
+  },
+  {
+    "id": "t098",
+    "date": "2026-10-17",
+    "description": "TESCO STORES MANCHESTER",
+    "merchant": "Tesco",
+    "amount": -108.01,
+    "category": "groceries"
+  },
+  {
+    "id": "t099",
+    "date": "2026-10-18",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t100",
+    "date": "2026-10-18",
+    "description": "GOOGLE *YouTube Music",
+    "merchant": "YouTube Music",
+    "amount": -10.99,
+    "category": "subscription"
+  },
+  {
+    "id": "t101",
+    "date": "2026-10-19",
+    "description": "ASDA GEORGE KIDS COATS",
+    "merchant": "Asda",
+    "amount": -48.0,
+    "category": "clothing"
+  },
+  {
+    "id": "t102",
+    "date": "2026-10-20",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -15.75,
+    "category": "groceries"
+  },
+  {
+    "id": "t103",
+    "date": "2026-10-20",
+    "description": "TV LICENCE MBP",
+    "merchant": "TV Licensing",
+    "amount": -14.95,
+    "category": "bills"
+  },
+  {
+    "id": "t104",
+    "date": "2026-10-22",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -14.73,
+    "category": "household"
+  },
+  {
+    "id": "t105",
+    "date": "2026-10-24",
+    "description": "ALDI STORES MANCHESTER",
+    "merchant": "Aldi",
+    "amount": -98.93,
+    "category": "groceries"
+  },
+  {
+    "id": "t106",
+    "date": "2026-10-25",
+    "description": "BOOTS MANCHESTER",
+    "merchant": "Boots",
+    "amount": -17.42,
+    "category": "health"
+  },
+  {
+    "id": "t107",
+    "date": "2026-10-25",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t108",
+    "date": "2026-10-26",
+    "description": "HMRC CHILD BENEFIT",
+    "merchant": "HMRC Child Benefit",
+    "amount": 241.92,
+    "category": "benefits"
+  },
+  {
+    "id": "t109",
+    "date": "2026-10-26",
+    "description": "STEPCHANGE DMP",
+    "merchant": "StepChange Debt Plan",
+    "amount": -85.0,
+    "category": "debt_repayment"
+  },
+  {
+    "id": "t110",
+    "date": "2026-10-27",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -11.18,
+    "category": "groceries"
+  },
+  {
+    "id": "t111",
+    "date": "2026-10-28",
+    "description": "GREGGS PLC PAYROLL",
+    "merchant": "Greggs (wages)",
+    "amount": 395.0,
+    "category": "income"
+  },
+  {
+    "id": "t112",
+    "date": "2026-10-28",
+    "description": "PARENTPAY SCHOOL DINNERS",
+    "merchant": "ParentPay",
+    "amount": -22.93,
+    "category": "children"
+  },
+  {
+    "id": "t113",
+    "date": "2026-10-29",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -15.28,
+    "category": "household"
+  },
+  {
+    "id": "t114",
+    "date": "2026-10-31",
+    "description": "LIDL STORES MANCHESTER",
+    "merchant": "Lidl",
+    "amount": -95.63,
+    "category": "groceries"
+  },
+  {
+    "id": "t115",
+    "date": "2026-11-01",
+    "description": "CASH WITHDRAWAL",
+    "merchant": "Cash",
+    "amount": -75.0,
+    "category": "cash"
+  },
+  {
+    "id": "t116",
+    "date": "2026-11-01",
+    "description": "MANCHESTER CC CTAX DD",
+    "merchant": "Manchester City Council",
+    "amount": -41.6,
+    "category": "council_tax"
+  },
+  {
+    "id": "t117",
+    "date": "2026-11-01",
+    "description": "RENT ONE MANCHESTER DD",
+    "merchant": "One Manchester",
+    "amount": -562.0,
+    "category": "rent"
+  },
+  {
+    "id": "t118",
+    "date": "2026-11-02",
+    "description": "BEE NETWORK BUS PASS",
+    "merchant": "Bee Network",
+    "amount": -80.0,
+    "category": "transport"
+  },
+  {
+    "id": "t119",
+    "date": "2026-11-03",
+    "description": "OCTOPUS ENERGY DD",
+    "merchant": "Octopus Energy",
+    "amount": -118.0,
+    "category": "utilities"
+  },
+  {
+    "id": "t120",
+    "date": "2026-11-03",
+    "description": "TESCO EXPRESS",
+    "merchant": "Tesco",
+    "amount": -11.06,
+    "category": "groceries"
+  },
+  {
+    "id": "t121",
+    "date": "2026-11-04",
+    "description": "VIRGIN MEDIA DD",
+    "merchant": "Virgin Media",
+    "amount": -32.0,
+    "category": "broadband"
+  },
+  {
+    "id": "t122",
+    "date": "2026-11-05",
+    "description": "HOME BARGAINS",
+    "merchant": "Home Bargains",
+    "amount": -24.17,
+    "category": "household"
+  },
+  {
+    "id": "t123",
+    "date": "2026-11-05",
+    "description": "UNITED UTILITIES DD",
+    "merchant": "United Utilities",
+    "amount": -36.5,
+    "category": "utilities"
+  }
+]
