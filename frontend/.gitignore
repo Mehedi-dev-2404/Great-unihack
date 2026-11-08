@@ -38,3 +38,4 @@ dist-ssr
 .impeccable/build/
 # This project uses bun.lock
 package-lock.json
+.vercel
